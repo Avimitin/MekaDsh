@@ -1,0 +1,12 @@
+/* Adapted from Harness ui-sidebar-right's strip and pane chrome. */
+.root { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
+.header { display: flex; align-items: center; flex: none; min-height: 44px; gap: 2px; padding: 0 6px; border-bottom: 0.5px solid var(--dsw-alias-border-l3); }
+.tabs { display: flex; align-self: stretch; flex: 1; min-width: 0; }
+.tab { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; padding: 0 10px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--dsw-alias-label-secondary); font: inherit; font-size: 12px; cursor: pointer; }
+.tab[aria-selected='true'] { border-bottom-color: var(--dsw-alias-label-primary); color: var(--dsw-alias-label-primary); }
+.tab:hover, .iconButton:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.iconButton { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 28px; height: 28px; padding: 6px; color: var(--dsw-alias-label-secondary); background: transparent; border: 0; border-radius: var(--dsw-radius-xl); cursor: pointer; }
+.body { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; overflow: auto; }
+.body[hidden] { display: none; }
+.loading { padding: 16px; color: var(--dsw-alias-label-secondary); font-size: 13px; }
+@media (any-pointer: coarse) { .iconButton { width: 40px; height: 44px; } .tab { min-height: 44px; padding-inline: 8px; } }

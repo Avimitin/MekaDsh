@@ -74,3 +74,34 @@ not every possible session or tool output. Visual comparison used local dsh sour
 styles and rendered mekadsh screenshots; pixel-for-pixel parity with a running dsh
 instance was not established. Browser regression scripts were temporary review
 tooling; the committed unit suite does not yet replace a browser CI suite.
+
+
+## Harness workspace port, October 2, 2026
+
+The earlier score evaluates engineering quality, not completeness or fidelity to
+Harness. This iteration adds frontend behavior without changing meka's API or the
+ported functionality core:
+
+- Resizable, expandable Files / Activity / Session panel with mobile dialogs.
+- Recorded file operations, edit-snippet diffs, source, Markdown and static HTML
+  previews, copy/download, and conversation summary links.
+- Searchable execution records with type/error filters and actual saved timestamps.
+- Inline skill/profile/permission suggestions and textual session references.
+- Directory-filtered session navigation and child-agent inspection.
+
+Verification: typecheck, production build, Nix build, and all 397 tests in 23 files pass.
+Chromium checks cover desktop (1440px), mobile (390px), and narrow (320px) layouts,
+expanded panels, file/operation selection, previews, filtering, and directory
+selection. No page overflow, uncaught page errors, or axe WCAG A/AA findings were
+reported in the tested settled states. Focused checks also cover dark activity,
+touch suggestion selection, IME, read-only/running sessions, explicit profile
+PATCH behavior, and child-session pagination. HTML preview probes found no script
+execution, navigation, or external requests; Markdown images render as links.
+
+File records cover successful tool operations available in loaded history. They
+are not a live filesystem or a complete per-turn Git diff. Activity uses saved
+message timestamps, not an execution timing trace. The current API does not expose
+remote file browsing/downloads, interactive terminals, preview proxies, account
+administration, or Harness's plugin runtime. Physical iPhone Safari and manual
+screen-reader checks remain unperformed. Existing large rendering-chunk warnings
+remain in Vite builds.

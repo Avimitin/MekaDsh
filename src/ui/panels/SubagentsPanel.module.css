@@ -1,0 +1,22 @@
+/* Harness ui-subagent lineage row anatomy (MIT), adapted to the workspace panel. */
+.root { padding: 16px; min-width: 0; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+.title { margin: 0 0 4px; color: var(--dsw-alias-label-primary); font-size: 14px; font-weight: 500; }
+.caption, .directory { margin: 0; color: var(--dsw-alias-label-secondary); font-size: 11px; line-height: 17px; overflow-wrap: anywhere; }
+.refresh { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border: 0; border-radius: var(--dsw-radius-sm); background: transparent; color: var(--dsw-alias-label-primary); cursor: pointer; }
+.refresh:hover, .row:hover, .parent:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.refresh:disabled, .load:disabled { opacity: 0.5; cursor: default; }
+.parent { display: flex; align-items: center; gap: 6px; padding: 8px; margin-bottom: 12px; color: var(--dsw-alias-label-secondary); font-size: 12px; text-decoration: none; border-radius: var(--dsw-radius-md); }
+.parent span { min-width: 0; overflow-wrap: anywhere; }
+.parent svg, .row > svg { flex: none; }
+.list { list-style: none; padding: 0; margin: 0 0 14px; }
+.item + .item { margin-top: 4px; }
+.row { display: flex; align-items: flex-start; gap: 8px; padding: 10px 8px; min-width: 0; border-radius: var(--dsw-radius-lg); color: var(--dsw-alias-label-primary); text-decoration: none; }
+.row > svg { margin-top: 2px; }
+.copy { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.name { font-size: 13px; line-height: 18px; overflow-wrap: anywhere; }
+.directory { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status { flex: none; max-width: 80px; color: var(--dsw-alias-label-secondary); font-size: 11px; line-height: 18px; text-align: right; }
+.status[data-running] { color: var(--dsw-alias-label-primary); font-weight: 500; }
+.notice { padding: 12px 0; color: var(--dsw-alias-label-secondary); font-size: 12px; line-height: 20px; overflow-wrap: anywhere; }
+.load { width: 100%; padding: 8px 12px; margin-bottom: 14px; border: 1px solid var(--dsw-alias-border-l1); border-radius: var(--dsw-radius-md); background: transparent; color: var(--dsw-alias-label-primary); font-size: 12px; cursor: pointer; }

@@ -8,6 +8,7 @@ import { useAction } from '../../lib/actions';
 import { useShortcut } from '../../lib/use-shortcut';
 import { shortcutAttribute, shortcutHint } from '../../lib/shortcut-keys';
 import { directoryLabel } from '../../features/working-directory';
+import { useWorkspacePanel } from '../../features/workspace-panel';
 import { Button } from '../primitives/Button';
 import {
   IconCheckOutlineRegular,
@@ -16,6 +17,8 @@ import {
   IconPanelLeftOutlineRegular,
   IconRefreshOutlineRegular,
   IconTreeCornerRegular,
+  IconCodeOutlineRegular,
+  IconFlatListOutlineRegular,
 } from '../icons';
 import { ReadingOptionsControl } from './reading-options';
 import { SessionActions } from './session-actions';
@@ -27,6 +30,7 @@ export function ConversationHeader({ state }: { state: SessionState | undefined 
   const runtime = useRuntime();
   const { controller } = useConnection();
   const { layout } = useSettings();
+  const workspace = useWorkspacePanel();
   const action = useAction();
   const session = state?.session;
   const [headingError, setHeadingError] = useState<unknown>();
@@ -72,6 +76,12 @@ export function ConversationHeader({ state }: { state: SessionState | undefined 
         )}
       </div>
       <div className={css.headerActions}>
+        {session && workspace && <>
+          <Button variant="ghost" size="sm" aria-label="Open recorded files" title="Recorded files"
+            onClick={() => workspace.openPanel('files')}><IconCodeOutlineRegular size={16} /></Button>
+          <Button variant="ghost" size="sm" aria-label="Open activity" title="Activity"
+            onClick={() => workspace.openPanel('activity')}><IconFlatListOutlineRegular size={16} /></Button>
+        </>}
         <ReadingOptionsControl />
         {state?.feed === 'unavailable' && (
           <Button
@@ -89,8 +99,9 @@ export function ConversationHeader({ state }: { state: SessionState | undefined 
           <Button
             variant="ghost"
             size="sm"
-            aria-label="Session details"
-            title={layout.detailsOpen ? 'Hide session details' : 'Show session details'}
+            data-workspace-toggle
+            aria-label="Workspace panel"
+            title={layout.detailsOpen ? 'Hide workspace panel' : 'Show workspace panel'}
             aria-expanded={layout.detailsOpen}
             aria-controls={layout.detailsOpen ? 'session-details' : undefined}
             onClick={() => runtime.storage.layout({ detailsOpen: !layout.detailsOpen })}

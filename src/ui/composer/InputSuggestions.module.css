@@ -1,0 +1,36 @@
+/* Adapted from Harness ui-input-trigger/MenuView.module.css (MIT). */
+.menu {
+  position: fixed;
+  z-index: 100;
+  box-sizing: border-box;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-specific-menu);
+  backdrop-filter: var(--dsw-menu-backdrop-filter);
+  color: var(--dsw-alias-label-primary);
+  --dsw-elevation-stroke-color: var(--dsw-alias-border-l1);
+  box-shadow: var(--dsw-elevation-prominent);
+}
+.viewport { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 8px;
+  border-radius: var(--dsw-radius-md);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 20px;
+}
+.active { background: var(--dsw-alias-interactive-bg-hover); }
+.name { flex: 0 1 50%; min-width: 0; overflow-wrap: anywhere; }
+.description { flex: 1; min-width: 0; color: var(--dsw-alias-label-secondary); font-size: 12px; line-height: 18px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.heading, .hint { flex: none; padding: 5px 8px; font-size: 11px; line-height: 16px; color: var(--dsw-alias-label-secondary); }
+.hint { border-top: 1px solid var(--dsw-alias-border-l1); }
+@media (pointer: coarse) { .item { min-height: 44px; } }

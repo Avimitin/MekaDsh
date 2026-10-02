@@ -21,8 +21,8 @@
 }
 
 .mobileDetails {
-  width: min(480px, 100%);
-  height: min(700px, 100%);
+  width: min(640px, 100%);
+  height: min(900px, 100%);
   gap: 0;
   padding: 0;
 }
@@ -135,3 +135,12 @@
     transition: none;
   }
 }
+
+.expandedDetails {
+  width: min(1400px, 96vw);
+  height: 92dvh;
+  max-width: 96vw;
+  padding: 0;
+  gap: 0;
+}
+.detailsTrack { max-width: calc(100% - 320px); }

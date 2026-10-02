@@ -7,9 +7,29 @@ from [mekaweb](https://github.com/k4yt3x/mekaweb).
 Chat with your agent, follow tool activity, respond to approvals, and manage
 sessions, memory, skills, schedules, and MCP servers.
 
-![mekadsh showing a sample conversation with syntax-highlighted TypeScript and the session sidebar](docs/showcase.png)
+![mekadsh showing a sample conversation, workspace navigation, and recorded file changes](docs/showcase.png)
 
 *The screenshot uses demo conversation data.*
+
+## Workspace features
+
+- **Files:** inspect successful file reads, writes, and edits recorded in a
+  conversation. Compare edit snippets, preview Markdown or static HTML, and copy
+  or download the available content.
+- **Activity:** search and filter saved/live messages and tool calls, inspect
+  inputs and results, and load earlier history.
+- **Session:** view context usage, background tasks, child agents, and schedules.
+- **Composer:** type `/` for skills, profiles, and permission choices, or `@` to
+  insert a session name and ID. Session references do not attach its messages.
+- **Workspaces:** filter sessions by server directory and start a chat there.
+
+Open the workspace panel from the conversation header. Its tabs support arrow-key
+navigation; on desktop, drag the divider to resize or expand the panel. On mobile,
+views open in a dialog.
+
+These features use the existing meka API. Files shows recorded content, not a live
+file browser or a complete Git diff. HTML previews disable scripts and external
+resources. Activity timestamps describe message persistence, not execution timing.
 
 ## Run locally
 

@@ -160,3 +160,10 @@
     animation: none;
   }
 }
+
+/* Keep the session name legible when the workspace panel narrows the chat. */
+@container (max-width: 560px) {
+  .header { flex-wrap: wrap; gap: 4px; padding: 8px 16px; }
+  .titleCluster { flex-basis: 100%; }
+  .headerActions { margin-left: auto; }
+}

@@ -16,6 +16,8 @@ import {
 import { useSessionMetadata, useSessionStates } from '../../session/hooks';
 import { useMarkSeen } from '../../session/unread';
 import { useSessionNavigation } from '../../features/session-navigation';
+import { useWorkspacePanel } from '../../features/workspace-panel';
+import { DeliverablesSummary } from '../workspace/DeliverablesSummary';
 import { useAction } from '../../lib/actions';
 import {
   groupAgentMessages,
@@ -139,6 +141,7 @@ function Opening({
 }
 
 function ConversationView({ state }: { state: SessionState }) {
+  const workspace = useWorkspacePanel();
   const { controller, connection, connectionIssue } = useConnection();
   const runtime = useRuntime();
   const { composerFocusRef } = useSessionNavigation();
@@ -335,6 +338,7 @@ function ConversationView({ state }: { state: SessionState }) {
                 )}
               </section>
             )}
+            {workspace && <DeliverablesSummary state={state} onOpen={() => workspace.openPanel('files')} />}
             {recovered.map((submission) => sentMessage(submission))}
             {queued.map(({ item, submission }) =>
               submission ? (

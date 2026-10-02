@@ -25,6 +25,8 @@ import { fileImage, imageAccept, imageFiles, pastedFiles } from './image-input';
 import { useComposerKeymap } from './keymap';
 import { observeControlRow } from './control-row-layout';
 import { isSafariBrowser, repairSafariTextareaLayout } from './safari';
+import { useInputSuggestions } from './InputSuggestions';
+import type { ComposerSuggestion } from './suggestions';
 import css from './Composer.module.css';
 
 export type ComposerActionKind = 'send' | 'queue' | 'steer' | 'interrupt' | 'stop';
@@ -98,7 +100,9 @@ export function InputBar({
   pills,
   settings,
   onError,
+  suggestions,
 }: {
+  suggestions: readonly ComposerSuggestion[];
   text: string;
   onTextChange: (value: string) => void;
   readOnly: boolean;
@@ -239,7 +243,9 @@ export function InputBar({
 
   const stop = action.kind === 'stop';
   const blocked = action.disabled || (!stop && attachBusy);
+  const completion = useInputSuggestions({ text, onTextChange, input, anchor: card, disabled: readOnly || pending, commands: suggestions });
   const keymap = useComposerKeymap({
+    intercept: completion.onKeyDown,
     canSubmit: () => !blocked && !stop,
     submit: () => action.run(),
     canCyclePermission: () => cyclePermission.enabled,
@@ -267,6 +273,7 @@ export function InputBar({
       }}
       onDrop={dragFiles}
     >
+      {completion.menu}
       {!readOnly && permissionLabel && (
         <span className="sr-only" role="status">
           Permission mode: {permissionLabel}
@@ -312,10 +319,14 @@ export function InputBar({
         aria-keyshortcuts={cyclePermission.enabled ? 'Shift+Tab' : undefined}
         placeholder={placeholder}
         value={text}
-        onChange={(event) => onTextChange(event.target.value)}
+        onChange={(event) => { onTextChange(event.target.value); completion.syncSelection(); }}
+        onSelect={completion.syncSelection}
+        onFocus={completion.onFocus}
+        onBlur={completion.onBlur}
+        {...completion.aria}
         onKeyDown={keymap.onKeyDown}
-        onCompositionStart={keymap.onCompositionStart}
-        onCompositionEnd={keymap.onCompositionEnd}
+        onCompositionStart={() => { keymap.onCompositionStart(); completion.onCompositionStart(); }}
+        onCompositionEnd={() => { keymap.onCompositionEnd(); completion.onCompositionEnd(); }}
         onPaste={(event) => {
           const files = pastedFiles(event.clipboardData);
           if (!files || !canAttach) return;

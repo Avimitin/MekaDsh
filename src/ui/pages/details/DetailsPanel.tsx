@@ -23,9 +23,10 @@ import {
   isSessionNotLoaded,
   jsonTreeLabels,
 } from '../shared/page';
+import { SubagentsPanel } from '../../panels/SubagentsPanel';
 import css from './DetailsPanel.module.css';
 
-type Tab = 'context' | 'tasks' | 'schedules';
+type Tab = 'context' | 'tasks' | 'agents' | 'schedules';
 
 export function DetailsPanel({ sessionId }: { sessionId: string }) {
   const canSchedule = useCan('schedule:r');
@@ -38,6 +39,7 @@ export function DetailsPanel({ sessionId }: { sessionId: string }) {
       panelId: 'details-panel-context',
     },
     { value: 'tasks', label: 'Tasks', id: 'details-tab-tasks', panelId: 'details-panel-tasks' },
+    { value: 'agents', label: 'Agents', id: 'details-tab-agents', panelId: 'details-panel-agents' },
   ];
   if (canSchedule)
     tabs.push({
@@ -59,6 +61,7 @@ export function DetailsPanel({ sessionId }: { sessionId: string }) {
       >
         {tab === 'context' && <ContextTab sessionId={sessionId} />}
         {tab === 'tasks' && <TasksTab sessionId={sessionId} />}
+        {tab === 'agents' && <SubagentsPanel sessionId={sessionId} />}
         {tab === 'schedules' && canSchedule && <SchedulesPage sessionId={sessionId} />}
       </div>
     </div>

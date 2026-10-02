@@ -10,6 +10,8 @@
 import { useRef, type KeyboardEvent } from 'react';
 
 export interface ComposerKeymapHandlers {
+  /** Optional suggestion keymap, run after IME guards and before submission. */
+  intercept?: (event: KeyboardEvent<HTMLTextAreaElement>) => boolean;
   /** Whether Enter may submit right now (locked/busy states refuse). */
   canSubmit(): boolean;
   /** Plain Enter submits. */
@@ -53,6 +55,7 @@ export function useComposerKeymap(handlers: ComposerKeymapHandlers) {
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>): void => {
     if (isComposingEvent(event, recentlyComposing)) return;
     const current = latest.current;
+    if (current.intercept?.(event)) return;
     if (
       event.key === 'Tab' &&
       event.shiftKey &&

@@ -32,6 +32,7 @@ import {
   IconWorkspaceTreeOutlineRegular,
 } from '../icons';
 import { SessionRow } from './SessionRow';
+import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 import { sessionTree } from './session-tree';
 import css from './SessionTree.module.css';
 
@@ -54,6 +55,7 @@ export function SessionTree({ wide }: { wide: boolean }) {
   const sessionItems = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const searchRoot = useRef<HTMLDivElement>(null);
+  const [workspace, setWorkspace] = useState('');
   const [children, setChildren] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [searchOnExpand, setSearchOnExpand] = useState(false);
@@ -70,13 +72,13 @@ export function SessionTree({ wide }: { wide: boolean }) {
   const searching = searchable && Boolean(query);
   const waiting = searching && query !== debounced;
   const list = useInfiniteQuery({
-    queryKey: [connection?.id, connection?.authority, 'session-list', children],
+    queryKey: [connection?.id, connection?.authority, 'session-list', children, workspace],
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam, signal }) => {
       if (!api) throw new Error('Connect first.');
       return api.get<Schema['ListSessionsResponse']>(
         '/v1/sessions',
-        { limit: 40, include_children: children, cursor: pageParam },
+        { limit: 40, include_children: children, cursor: pageParam, ...(workspace ? { cwd: workspace } : {}) },
         signal,
       );
     },
@@ -250,6 +252,7 @@ export function SessionTree({ wide }: { wide: boolean }) {
 
   return (
     <div className={css.root}>
+      <WorkspaceSwitcher value={workspace} onChange={setWorkspace} searching={searching} />
       <div className={css.sectionHeader}>
         <span
           className={cn(css.sectionLabel, css.wide, searchExpanded && css.sectionLabelHidden)}
@@ -385,7 +388,7 @@ export function SessionTree({ wide }: { wide: boolean }) {
             ) : (
               <div className={css.emptyState} role="status">
                 <IconQueueOutlineRegular size={24} />
-                <div>No sessions yet.</div>
+                <div>{workspace ? 'No sessions in this directory.' : 'No sessions yet.'}</div>
               </div>
             ))}
           {!searching && list.hasNextPage && (

@@ -148,6 +148,7 @@ function ConnectionSwitcher({ wide }: { wide: boolean }) {
 
 /** The sidebar column shell. */
 export function Sidebar() {
+  const { connection } = useConnection();
   const { collapsed, width, toggle: toggleSidebar } = useSidebarLayout();
   const { newSession } = useSessionNavigation();
   const canWrite = useCan('sessions:w');
@@ -339,7 +340,7 @@ export function Sidebar() {
       {/* The browsing region fills the column between the controls and the
           foot in both states; its rail icon column rides the same area. */}
       <div className={css.regionArea}>
-        <SessionTree wide={wide} />
+        <SessionTree key={connection?.id} wide={wide} />
       </div>
 
       {/* Footer actions stack above Settings in both sidebar widths. */}

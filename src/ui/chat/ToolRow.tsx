@@ -1,5 +1,6 @@
 import { memo, useMemo, useState } from 'react';
 import { cn } from '../../lib/cn';
+import { useWorkspacePanel } from '../../features/workspace-panel';
 import { toolSummary } from '../../session/tool-summary';
 import { DisclosureRow } from '../primitives/DisclosureRow';
 import { TextShimmer } from '../primitives/TextShimmer';
@@ -113,6 +114,9 @@ export const ToolRow = memo(function ToolRow({
   call: ToolCallView;
   defaultOpen?: boolean | undefined;
 }) {
+  const workspace = useWorkspacePanel();
+  const filePath = /^(file_(read|edit|write)|read_file|edit_file|write_file)$/.test(call.name)
+    ? inputString(call.input, 'path') ?? inputString(call.input, 'file_path') : undefined;
   const [expanded, setExpanded] = useState(defaultOpen);
   const running = call.state === 'composing' || call.state === 'executing';
   const expandable = call.state !== 'composing';
@@ -187,6 +191,11 @@ export const ToolRow = memo(function ToolRow({
       >
         {open ? (
           <div className={css.bodyWrap}>
+            {workspace && filePath && call.state === 'completed' && (
+              <button type="button" className={css.openFile} onClick={() => workspace.openPanel('files', filePath)}>
+                Open in files
+              </button>
+            )}
             <ExpandedBody call={call} />
           </div>
         ) : undefined}

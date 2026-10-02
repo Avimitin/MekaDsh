@@ -196,3 +196,10 @@
     transition: none;
   }
 }
+
+/* Four detail views must fit the narrow mobile drawer without squashing labels. */
+.tabBar [role='tab'] {
+  min-width: 0;
+  padding-inline: 6px;
+  font-size: 12px;
+}

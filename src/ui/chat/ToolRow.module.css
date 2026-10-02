@@ -123,3 +123,15 @@
     transition: none;
   }
 }
+
+.openFile {
+  align-self: flex-end;
+  border: 0;
+  border-radius: var(--dsw-radius-md);
+  padding: 6px 10px;
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}

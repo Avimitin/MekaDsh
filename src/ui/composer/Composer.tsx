@@ -17,7 +17,32 @@ import { ContextMeter } from './ContextMeter';
 import { InputBar, type ComposerActionKind } from './InputBar';
 import { QueuedDock } from './QueuedDock';
 import { PERMISSION_LEVELS, PermissionPill, ProfilePill, SettingsPopover, SkillsMenu } from './menus';
+import type { ComposerSuggestion } from './suggestions';
 import css from './Composer.module.css';
+
+function composerSuggestions({ skills, profiles, permissions, onSkill, onProfile, onPermission }: {
+  skills: Schema['SkillView'][];
+  profiles: Schema['ProfilesResponse']['profiles'];
+  permissions: string[];
+  onSkill?: ((name: string) => void) | undefined;
+  onProfile?: ((name: string) => void) | undefined;
+  onPermission?: ((permission: string) => void) | undefined;
+}): ComposerSuggestion[] {
+  return [
+    ...(onSkill ? skills.map((skill): ComposerSuggestion => ({
+      id: `skill:${skill.name}`, label: `/${skill.name}`, description: skill.description,
+      group: 'Skills', pick: () => onSkill(skill.name),
+    })) : []),
+    ...(onProfile ? profiles.map((profile): ComposerSuggestion => ({
+      id: `profile:${profile.name}`, label: `/profile:${profile.name}`, description: profile.model ?? 'Switch profile',
+      group: 'Profiles', pick: () => onProfile(profile.name),
+    })) : []),
+    ...(onPermission ? permissions.map((permission): ComposerSuggestion => ({
+      id: `permission:${permission}`, label: `/permission:${permission}`, description: 'Change permission mode',
+      group: 'Permissions', pick: () => onPermission(permission),
+    })) : []),
+  ];
+}
 
 const subscribeToNothing = () => () => {};
 
@@ -185,6 +210,12 @@ function SessionComposer({
         />
       )}
       <InputBar
+        suggestions={composerSuggestions({ skills: skillList, profiles: profileList, permissions,
+          onSkill: !readOnly && !pending && !running ? (name) => updateOptions({ skill: name }) : undefined,
+          onProfile: profileDisabled ? undefined : changeProfile,
+          onPermission: permissionDisabled ? undefined : changePermission,
+        })}
+        pending={pending}
         text={draft.text}
         onTextChange={draft.setText}
         readOnly={readOnly}
@@ -193,7 +224,7 @@ function SessionComposer({
             ? 'Read-only session'
             : feed !== 'connected'
               ? 'Waiting for session connection…'
-              : 'Message meka…'
+              : 'Message meka… (/ for commands, @ for sessions)'
         }
         focusId={sessionId}
         autoFocus={autoFocus}
@@ -342,11 +373,16 @@ function HeroComposer({ autoFocus }: { autoFocus: boolean }) {
     <>
       <ConflictNotice draft={draft} />
       <InputBar
+        suggestions={composerSuggestions({ skills: skillList, profiles: profileList, permissions,
+          onSkill: disabled ? undefined : (name) => updateOptions({ skill: name }),
+          onProfile: disabled ? undefined : (profile) => creation.setSettings({ ...creation.settings, profile }),
+          onPermission: disabled ? undefined : changePermission,
+        })}
         text={draft.text}
         onTextChange={draft.setText}
         readOnly={!canWrite}
         pending={creation.busy}
-        placeholder={creation.busy ? 'Creating session…' : 'Ask meka anything…'}
+        placeholder={creation.busy ? 'Creating session…' : 'Ask meka anything… (/ for commands, @ for sessions)'}
         focusId="new"
         autoFocus={autoFocus}
         images={options.images}
