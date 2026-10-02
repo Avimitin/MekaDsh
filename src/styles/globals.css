@@ -44,6 +44,15 @@ select {
   color: inherit;
 }
 
+/* iOS zooms focused form controls with text smaller than 16px. Keep touch
+   inputs readable while preserving larger inherited fonts and pinch zoom.
+   Include the root and body so component font declarations cannot lower it. */
+@media (any-pointer: coarse) {
+  :root body :is(input, textarea, select) {
+    font-size: max(16px, 1em);
+  }
+}
+
 button {
   cursor: pointer;
   background: none;

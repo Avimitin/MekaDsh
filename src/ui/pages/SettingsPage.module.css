@@ -85,6 +85,17 @@
   font-size: 12px;
   line-height: 18px;
   color: var(--dsw-alias-label-secondary);
+  overflow-wrap: anywhere;
+}
+
+@container settings-page (max-width: 640px) {
+  .scopeList {
+    justify-content: flex-start;
+  }
+
+  .value {
+    text-align: start;
+  }
 }
 
 .modal {

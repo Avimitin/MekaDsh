@@ -6,6 +6,12 @@
   overflow-y: auto;
 }
 
+.page,
+.compact {
+  min-width: 0;
+  container: settings-page / inline-size;
+}
+
 .column {
   display: flex;
   flex-direction: column;
@@ -120,6 +126,7 @@
 
 .rowText {
   display: flex;
+  flex: 1 1 40%;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
@@ -127,6 +134,7 @@
 
 .rowLabel {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   font-size: 14px;
@@ -149,7 +157,9 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 60%;
   flex-wrap: wrap;
 }
 
@@ -302,6 +312,29 @@
 
 .time {
   color: inherit;
+}
+
+/* Labels and descriptions need their own line when the settings pane is
+   narrow, including when it is embedded beside a desktop conversation. */
+@container settings-page (max-width: 640px) {
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .rowText {
+    flex: auto;
+  }
+
+  .rowControl {
+    justify-content: flex-start;
+    max-width: 100%;
+  }
+
+  .sectionHeader {
+    flex-wrap: wrap;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
