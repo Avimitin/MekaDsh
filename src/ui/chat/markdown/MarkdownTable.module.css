@@ -1,0 +1,94 @@
+/* Tables: dsh MarkdownText table sheet plus the measurement probe the column
+   fitting uses. The probe inherits the real cells' font and padding through
+   these same selectors, then overrides layout so unwrapped and min-content
+   widths can be read off it. */
+
+.tableLayout {
+  min-width: 0;
+  margin: 16px 0;
+}
+
+.tableScroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+/* Chromium keyboard-focuses scrollable containers by default; the ring uses
+   the sheet's link focus color. */
+.tableScroll:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+}
+
+.tableScroll table {
+  border-collapse: collapse;
+  width: max-content;
+  max-width: max-content;
+}
+
+/* Once the fitting pass publishes explicit column widths, the colgroup and
+   the inline table width own layout. */
+.tableScroll table[data-sized] {
+  table-layout: fixed;
+}
+
+.tableScroll th {
+  text-align: start;
+  padding: 10px 16px;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l3);
+  border-top: none;
+  font-weight: 500;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(22px + var(--dsh-content-font-delta-secondary, 0px));
+  max-width: 320px;
+  max-width: min(30vw, 320px);
+  min-width: 100px;
+}
+
+.tableScroll td {
+  padding: 10px 16px;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(22px + var(--dsh-content-font-delta-secondary, 0px));
+  max-width: 320px;
+  max-width: min(30vw, 320px);
+  min-width: 100px;
+}
+
+.tableScroll th:first-child,
+.tableScroll td:first-child {
+  padding-left: 0;
+}
+
+.tableScroll td:last-child {
+  padding-right: 0;
+}
+
+.tableScroll table code {
+  font-size: 11px;
+}
+
+/* The probe renders sampled rows offscreen: unwrapped first, then min-content
+   when data-minimum is set. These rules must outrank the cell rules above. */
+.tableScroll > .measure {
+  position: fixed;
+  inset: 0 auto auto 0;
+  visibility: hidden;
+  pointer-events: none;
+  contain: layout style paint;
+}
+
+.tableScroll > .measure,
+.tableScroll > .measure :is(tbody, tr, th, td) {
+  display: block;
+  width: max-content;
+  min-width: 0;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.tableScroll > .measure[data-minimum] :is(th, td) {
+  width: min-content;
+  white-space: normal;
+}

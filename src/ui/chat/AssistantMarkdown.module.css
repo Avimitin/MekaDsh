@@ -1,0 +1,375 @@
+/* Visual baseline: dsh ui-primitives markdown/MarkdownText.module.css. The
+   composed font shorthands that sheet reads from the theme are declared
+   locally on .markdown (identical values) because this repo's token set keeps
+   only the families; the rest of the sheet follows verbatim. */
+
+.markdown {
+  --dsw-font-markdown-h1: 700 calc(21px + var(--dsh-content-font-delta, 0px)) /
+    calc(30px + var(--dsh-content-font-delta, 0px)) var(--dsw-font-family);
+  --dsw-font-markdown-h2: 700 calc(19px + var(--dsh-content-font-delta, 0px)) /
+    calc(28px + var(--dsh-content-font-delta, 0px)) var(--dsw-font-family);
+  --dsw-font-markdown-h3: 700 calc(18px + var(--dsh-content-font-delta, 0px)) /
+    calc(26px + var(--dsh-content-font-delta, 0px)) var(--dsw-font-family);
+  --dsw-font-markdown-h4: 600 var(--dsh-content-font-size, 14px) /
+    calc(24px + var(--dsh-content-font-delta, 0px)) var(--dsw-font-family);
+  --dsw-font-markdown-base: var(--dsh-content-font-size, 14px) /
+    calc(24px + var(--dsh-content-font-delta, 0px)) var(--dsw-font-family);
+  --dsw-font-markdown-base-strong: 600 var(--dsh-content-font-size, 14px) /
+    calc(24px + var(--dsh-content-font-delta, 0px)) var(--dsw-font-family);
+  --dsw-font-markdown-code: 12px/19px var(--ds-font-family-code);
+
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font: var(--dsw-font-markdown-base);
+  color: var(--dsw-alias-label-primary);
+}
+
+.markdown strong {
+  font-weight: 600;
+}
+
+.markdown h1 {
+  font: var(--dsw-font-markdown-h1);
+  margin: 32px 0 16px;
+}
+
+.markdown h2 {
+  font: var(--dsw-font-markdown-h2);
+  margin: 32px 0 16px;
+}
+
+.markdown h3 {
+  font: var(--dsw-font-markdown-h3);
+  margin: 32px 0 16px;
+}
+
+.markdown h4 {
+  font: var(--dsw-font-markdown-h4);
+  margin: 16px 0;
+}
+
+.markdown :where(h5, h6) {
+  font: var(--dsw-font-markdown-base-strong);
+  margin: 16px 0;
+}
+
+.markdown :where(h1, h2, h3, h4, h5, h6) strong {
+  font-weight: inherit;
+}
+
+.markdown p {
+  margin: 16px 0;
+}
+
+/* Tighten h4–h6 against a following list (design: 8px gap). */
+.markdown :where(h4, h5, h6) + :where(ul, ol) {
+  margin-top: 8px;
+}
+
+.markdown :where(h4, h5, h6):has(+ :where(ul, ol)) {
+  margin-bottom: 8px;
+}
+
+.markdown a {
+  color: var(--dsw-alias-link);
+  font-weight: 500;
+  transition: box-shadow var(--ds-transition-duration) var(--ds-ease-in-out);
+  position: relative;
+  text-decoration: none;
+  /* Transparent hit-area padding; literal zero-alpha only (no painted color). */
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  margin-left: -3px;
+  margin-right: -3px;
+}
+
+.markdown a:hover,
+.markdown a:focus {
+  outline: none;
+  text-decoration: underline dotted var(--dsw-alias-link);
+  text-underline-offset: 3px;
+}
+
+.markdown a:focus-visible {
+  box-shadow: 0 0 0 2px var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+}
+
+.markdown :where(ul, ol) {
+  margin: 16px 0;
+  padding-left: 18px;
+}
+
+.markdown li:not(:first-child) {
+  margin-top: 6px;
+}
+
+.markdown li > :where(ul, ol) {
+  margin-top: 4px;
+}
+
+.markdown li::marker {
+  line-height: 24px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+/* Nested ol under ul/ol: markers inside (models sometimes emit this shape). */
+.markdown :where(ul, ol) ol {
+  list-style-position: inside;
+  padding-left: 0;
+}
+
+.markdown :where(ul, ol) ol li p {
+  display: inline;
+}
+
+.markdown li > p {
+  margin: 8px 0;
+}
+
+.markdown li > *:first-child {
+  margin-top: 0;
+}
+
+/* Keep list-nested code-block vertical margins (design: +4px vs other last children). */
+.markdown li > *:last-child:not([data-code-block]) {
+  margin-bottom: 0;
+}
+
+.markdown hr {
+  display: block;
+  border: none;
+  height: 0.5px;
+  margin: 32px 0;
+  background: var(--dsw-alias-border-l2);
+}
+
+.markdown blockquote {
+  border-left: 2px solid var(--dsw-alias-label-caption);
+  margin: 16px 0 0;
+  padding-left: 14px;
+}
+
+.markdown pre {
+  margin: 16px 0;
+  font-family: var(--ds-font-family-code);
+  overflow: auto;
+}
+
+.markdown :not(pre) > code {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  font: var(--dsw-font-markdown-code);
+  font-family: var(--ds-font-family-code);
+  font-size: 0.875em !important;
+  background-color: var(--dsw-alias-markdown-inline-code);
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: var(--dsw-radius-sm);
+  padding: 0 5px;
+}
+
+.markdown :where(h1, h2, h3, h4, h5, h6) code {
+  font: inherit;
+  font-family: var(--ds-font-family-code);
+}
+
+.markdown :global(.katex-display) {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.markdown :global(.katex-error) {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--dsw-alias-state-error-primary) !important;
+}
+
+.markdown input[type='checkbox'] {
+  margin: 0 8px 0 0;
+  accent-color: var(--dsw-alias-label-secondary);
+}
+
+.markdown > *:first-child,
+.markdown p:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown > *:last-child,
+.markdown p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* GitHub-style admonitions ([!NOTE] … [!CAUTION]), mapped to the dsw state
+   tokens (mekaweb's palette restated in platform colors). */
+.alert {
+  --alert-color: var(--dsw-alias-state-business-primary);
+
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 3px solid var(--alert-color);
+  border-radius: 0 var(--dsw-radius-md) var(--dsw-radius-md) 0;
+  background: var(--dsw-alias-markdown-inline-code);
+}
+
+.alertHeading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: color-mix(in srgb, var(--alert-color) 60%, var(--dsw-alias-label-primary));
+  font-weight: 600;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: 20px;
+}
+
+.alert p {
+  margin: 7px 0 0;
+}
+
+.alertTip {
+  --alert-color: var(--dsw-alias-state-success-primary);
+}
+
+.alertImportant {
+  --alert-color: var(--dsw-alias-brand-primary);
+}
+
+.alertWarning {
+  --alert-color: var(--dsw-alias-state-warn-label);
+}
+
+.alertCaution {
+  --alert-color: var(--dsw-alias-state-error-primary);
+}
+
+/* Typing caret trailing streamed text: a 2px currentColor bar, 1s blink. */
+.streamingCaret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  vertical-align: -0.15em;
+  animation: meka-markdown-caret-blink 1s step-end infinite;
+}
+
+@keyframes meka-markdown-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Compact variant (ReasoningRow's think body, CompactionCard's summary): the
+   secondary tier, one step under the body, tertiary color. */
+.compact {
+  max-width: 100%;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(20px + var(--dsh-content-font-delta-secondary, 0px));
+  color: var(--dsw-alias-label-secondary);
+}
+
+.compact :is(h1, h2, h3, h4, h5, h6) {
+  margin: 8px 0 4px;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+}
+
+.compact :is(p, ul, ol, blockquote) {
+  margin: 4px 0;
+}
+
+.compact li:not(:first-child) {
+  margin-top: 2px;
+}
+
+.compact li > p {
+  margin: 4px 0;
+}
+
+.compact li::marker {
+  line-height: inherit;
+  color: inherit;
+}
+
+.compact blockquote {
+  padding-left: 8px;
+}
+
+.compact hr {
+  margin: 8px 0;
+}
+
+.compact a {
+  font-weight: inherit;
+  color: inherit;
+  text-decoration: underline dotted;
+}
+
+.compact a:hover,
+.compact a:focus {
+  text-decoration-color: currentColor;
+}
+
+.compact :not(pre) > code {
+  display: inline;
+  font: inherit;
+  font-family: var(--ds-font-family-code);
+  font-size: 1em !important;
+  border-radius: var(--dsw-radius-xs);
+  padding: 0 3px;
+  box-decoration-break: clone;
+}
+
+.markdown.compact [data-code-block] {
+  margin: 4px 0;
+  color: inherit;
+}
+
+.markdown.compact [data-markdown-table] {
+  margin: 4px 0;
+}
+
+/* Shiki writes token colors inline; compact code uses the surrounding text color. */
+.compact pre,
+.compact pre :is(code, span) {
+  color: inherit !important;
+}
+
+.compact :is(th, td) {
+  padding: 4px 8px;
+  font: inherit;
+}
+
+.compact th {
+  font-weight: 600;
+}
+
+.compact :global(.katex) {
+  font-size: 1em;
+}
+
+/* Keep KaTeX's inline baseline and scroll the containing block only when needed. */
+.compact :is(p, h1, h2, h3, h4, h5, h6, ul, ol):has(:global(.katex)) {
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* KaTeX descenders can paint one pixel below a fractional line-box edge. */
+  padding-bottom: 1px;
+}
+
+.compact :global(.katex-display) {
+  margin: 4px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .streamingCaret {
+    animation: none;
+  }
+}

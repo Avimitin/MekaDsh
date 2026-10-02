@@ -1,0 +1,507 @@
+/* Sidebar column (port of dsh ui-sidebar SidebarRoot.module.css, desktop
+   chrome rules dropped): vertical stack, padding 12/6, sidebar fill painted by
+   the layout column. Collapse is a slide + crossfade, not a morph: the content
+   holds its frozen expanded layout (inline width set by the component) and
+   fades in place (.fading) while the sliding column (AppFrame grid tracks)
+   clips it; the rail layout (.collapsed) only applies after the fade settles,
+   so nothing reflows mid-slide. */
+
+.root {
+  --dsh-sidebar-inline-padding: 12px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 6px var(--dsh-sidebar-inline-padding);
+  box-sizing: border-box;
+  background: var(--dsw-specific-sidebar-fill);
+  color: var(--dsw-alias-label-primary);
+  font-size: 14px;
+  /* The sidebar is elevated above the conversation surface, so a revealed
+     scrollbar uses the l2 pair. .quietBars hides it without changing layout. */
+  --dsh-scrollbar-thumb: var(--dsw-alias-scrollbar-bg-l2);
+  --dsh-scrollbar-thumb-hover: var(--dsw-alias-scrollbar-hover-l2);
+}
+
+/* Rail geometry (figma rail spec): 36x36 control boxes centered in the 56px
+   rail (10px side padding), 12px vertical rhythm, 18px from the rail top. */
+.root.collapsed {
+  padding: 18px 10px 6px;
+}
+
+/* Scrollbars in the column are a pointer affordance: the shell adds this
+   class whenever the pointer is not inside (Sidebar.tsx owns the linger), and
+   rebinding ui-theme's indirection pair to transparent takes the thumb out of
+   every scroll region nested under it. transparent rather than display: none:
+   the reservation (scrollbar-gutter: stable on the list) stays in force, so
+   revealing the thumb never reflows a row. */
+.root.quietBars {
+  --dsh-scrollbar-thumb: transparent;
+  --dsh-scrollbar-thumb-hover: transparent;
+}
+
+/* Collapse phase 1: the whole frozen-width content fades out in place over
+   150ms; at settle the children unmount/snap to the rail layout. */
+.fading > * {
+  opacity: 0;
+  transition: opacity 150ms var(--ds-ease-in-out);
+}
+
+/* Wide-only content fades back in on expand remount. */
+.wide {
+  animation: wide-in 200ms var(--ds-ease-in-out);
+}
+
+@keyframes wide-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* At the 150ms rail settle, the upper controls enter from the former rail
+   right edge over the remaining 150ms of the AppFrame track transition. The
+   bottom-pinned settings seat shares their opacity timeline but stays
+   horizontally fixed. Only a live collapse gets .railIn; a cold collapsed
+   render stays static. */
+.railIn .iconButton,
+.railIn .newSession,
+.railIn .panelList,
+.railIn .regionArea {
+  animation: rail-in 150ms var(--ds-ease-in-out) backwards;
+}
+
+.railIn .footArea {
+  animation: rail-fade-in 150ms var(--ds-ease-in-out) backwards;
+}
+
+@keyframes rail-in {
+  from {
+    opacity: 0;
+    transform: translateX(49px);
+  }
+}
+
+@keyframes rail-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Logo row: expanded keeps the panel toggle at the right edge; the rail gives
+   every control the same base left anchor before the shared entry translation
+   is applied. */
+.logoRow {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 60px;
+  padding: 8px 0 8px 4px;
+  margin-bottom: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.collapsed .logoRow {
+  height: 36px;
+  padding: 0;
+  margin-bottom: 12px;
+  justify-content: flex-start;
+  /* The settled rail's 36px toggle is wider than this 35px row; the base row's
+     clip would cut the control's right edge, so the rail stops clipping once
+     the slide has settled. */
+  overflow: visible;
+}
+
+/* Brand group: the mark plus wordmark rides the text ink. A button only in
+   behavior (New session shortcut): the pointer cursor is the sole affordance,
+   no hover chrome on the mark. */
+.brand {
+  flex: 1;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.brand:disabled {
+  cursor: default;
+}
+
+.brandIdentity {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+  min-width: 0;
+}
+
+.brandMark {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.brandMark img {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--dsw-radius-sm);
+}
+
+.brandName {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  height: 24px;
+  font-family: var(--dsw-font-family-brand);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.iconButton {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--dsw-radius-sm);
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.iconButton:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+/* The toggle is flush with .logoRow, which clips its own overflow, so an
+   outward ring loses the pixels that leave the row. Draw this control's ring
+   inside its own box instead. */
+.iconButton.toggle:focus-visible {
+  outline: var(--dsw-focus-ring-width) solid
+    var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+  outline-offset: -2px;
+}
+
+.collapsed .iconButton {
+  width: 36px;
+  height: 36px;
+  /* Rail hovers share the panel rows' and New Session's 12px rounding. */
+  border-radius: var(--dsw-radius-md);
+  /* Rail icons ride the primary ink (figma rail spec). */
+  color: var(--dsw-alias-label-primary);
+}
+
+/* Rail logo swap: collapsed, the toggle rests as the meka mark (no hover
+   circle) and hovering reveals the panel icon, the expand affordance (figma
+   sidebar-hover flow). Expanded it is a plain panel icon. */
+.collapsed .toggle .panelIcon {
+  display: none;
+}
+
+.collapsed .toggle:hover .panelIcon,
+.collapsed .toggle:focus-visible .panelIcon {
+  display: inline;
+}
+
+.collapsed .toggle:hover .railMark,
+.collapsed .toggle:focus-visible .railMark {
+  display: none;
+}
+
+.railMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.railMark img {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--dsw-radius-sm);
+}
+
+/* New session: 38px bar, 12px radius (figma 133:7634 geometry); collapsed it
+   renders as the rail's plain icon control. */
+.newSession {
+  container-type: inline-size;
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  height: 38px;
+  padding: 8px 12px;
+  margin: 0 2px 12px;
+  box-sizing: border-box;
+  border: 0.5px solid var(--dsw-alias-border-l3);
+  border-radius: var(--dsw-radius-md);
+  background: var(--dsw-alias-button-elevated-fill);
+  color: var(--dsw-alias-label-primary);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.newSession:hover:not(:disabled) {
+  background: var(--dsw-alias-button-floating-hover);
+}
+
+.newSession:disabled {
+  color: var(--dsw-alias-label-dimmed);
+  cursor: default;
+}
+
+.collapsed .newSession {
+  align-self: flex-start;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 0 0 12px;
+  gap: 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+.collapsed .newSession:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.newSessionLabel {
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.collapsed .newSessionLabel {
+  max-width: 0;
+}
+
+.newSessionLabelMask {
+  flex: 1;
+  min-width: 0;
+}
+
+.newSession:is(:hover, :focus-visible) .newSessionLabelMask:has(+ .newSessionShortcut) {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, black calc(100% - 16px), transparent);
+}
+
+.newSessionContent {
+  display: flex;
+  width: 100cqw;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.newSessionContent > svg {
+  flex: none;
+}
+
+.newSessionShortcut {
+  opacity: 0;
+  display: inline-flex;
+  flex: none;
+  pointer-events: none;
+  font-weight: 400;
+}
+
+.newSession:is(:hover, :focus-visible) .newSessionShortcut {
+  opacity: 1;
+}
+
+.panelList {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+/* Panel entries share the New Session bar's 12px radius and 2px inset and the
+   primary ink; the active row rides the sidebar nav-item tokens. */
+.panelRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 2px;
+  min-height: 36px;
+  padding: 7px 8px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: var(--dsw-radius-md);
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  line-height: 22px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.panelRow:hover {
+  background: var(--dsw-specific-sidebar-nav-item-hover);
+}
+
+.panelRow.panelActive,
+.panelRow.panelActive:hover {
+  background: var(--dsw-specific-sidebar-nav-item-active);
+  color: var(--dsw-alias-label-primary);
+}
+
+.panelRow:focus-visible {
+  outline: var(--dsw-focus-ring-width) solid
+    var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+  outline-offset: -2px;
+}
+
+.panelGlyph {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panelTitle {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panelMeta {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.collapsed .panelList {
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.collapsed .panelRow {
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  color: var(--dsw-alias-label-primary);
+}
+
+/* Region seat: always mounted so the foot never moves. Its trailing margin
+   cancels the wide shell inset so the nested scrollbar can sit at the sidebar
+   edge; the session tree restores that inset inside its own rows. */
+.regionArea {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-left: -4px;
+  margin-right: calc(-1 * var(--dsh-sidebar-inline-padding));
+  padding-left: 4px;
+  overflow: hidden;
+}
+
+.collapsed .regionArea {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+}
+
+/* Footer seats: additive actions stack above Settings in both widths. */
+.footArea {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsArea,
+.footerActions {
+  flex: none;
+  min-width: 0;
+  width: 100%;
+}
+
+.footerActions {
+  display: flex;
+  flex-direction: column;
+}
+
+.collapsed .footArea {
+  align-items: center;
+  gap: 12px;
+}
+
+.collapsed .settingsArea,
+.collapsed .footerActions {
+  display: flex;
+  justify-content: center;
+  width: auto;
+}
+
+/* Connection switcher: a panel row whose trailing chevrons name it a menu. */
+.switcherHost {
+  display: block;
+}
+
+.switcherEndpoint {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.switcherText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.switcherName {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wide,
+  .fading > *,
+  .railIn .iconButton,
+  .railIn .newSession,
+  .railIn .panelList,
+  .railIn .footArea,
+  .railIn .regionArea {
+    transition: none;
+    animation: none;
+  }
+}

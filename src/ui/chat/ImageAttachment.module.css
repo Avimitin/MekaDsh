@@ -1,0 +1,61 @@
+/* Inline image attachment: a fitted thumbnail with a zoom-in cursor, status
+   and error lines in the caption tone. */
+
+.attachment {
+  display: block;
+  width: fit-content;
+  max-width: min(100%, 420px);
+  margin: 12px 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: zoom-in;
+}
+
+.attachment img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: var(--dsw-radius-lg);
+  object-fit: contain;
+}
+
+.attachment:focus-visible {
+  outline: var(--dsw-focus-ring-width) solid
+    var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+  outline-offset: 3px;
+  border-radius: var(--dsw-radius-lg);
+}
+
+.status {
+  margin: 12px 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: 20px;
+}
+
+.error {
+  margin: 12px 0;
+  color: color-mix(in srgb, var(--dsw-alias-state-error-primary) 60%, var(--dsw-alias-label-primary));
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: 20px;
+}
+
+.unavailable {
+  margin: 12px 0;
+}
+
+.download {
+  color: var(--dsw-alias-link);
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: 20px;
+}
+
+.download:hover {
+  text-decoration: underline dotted var(--dsw-alias-link);
+  text-underline-offset: 3px;
+}

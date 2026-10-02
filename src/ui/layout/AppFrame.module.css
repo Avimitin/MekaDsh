@@ -1,0 +1,161 @@
+/* Two-column shell frame (adapted from dsh ui-layout AppFrame.module.css):
+   sidebar track | center track. Only a discrete collapse/expand toggle eases
+   the tracks; steady-state updates (drag, settings) land instantly. */
+
+.frame {
+  position: relative; /* anchors the drag handle, which straddles the column border */
+  display: grid;
+  grid-template-rows: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--dsw-alias-bg-base);
+}
+
+.frame[data-animating] {
+  transition: grid-template-columns var(--ds-transition-duration-slow) var(--ds-ease-in-out);
+}
+
+/* Dragging writes widths at pointer cadence; easing them would detach the
+   column from the handle. */
+.frame[data-dragging] {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame[data-animating] {
+    transition: none;
+  }
+}
+
+.sidebarCol {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--dsw-specific-sidebar-fill);
+  border-right: 0.5px solid var(--dsw-alias-border-l3);
+}
+
+.centerCol {
+  position: relative; /* anchors the connection banner's top-center overlay */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  outline: none;
+}
+
+/* Drag handle: an 8px hit strip centered on the column border via inline
+   left, above column content. It draws no visible pill. */
+.handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  margin-left: -4px;
+  cursor: col-resize;
+  z-index: 11;
+  touch-action: none;
+}
+
+.handle:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary);
+  outline-offset: -2px;
+}
+
+.sidebarLayer {
+  display: contents;
+}
+
+.sidebarLayer[hidden] {
+  display: none;
+}
+
+.frame[data-mobile] .sidebarLayer:not([hidden]) {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 101;
+}
+
+.frame[data-mobile] .sidebarCol {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 1;
+  width: min(280px, 100%);
+  box-shadow: var(--dsw-elevation-prominent);
+}
+
+.drawerMask {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--dsw-alias-bg-mask-1);
+}
+
+.mobileBar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 8px;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l3);
+  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+}
+
+.mobileToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--dsw-radius-md);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.mobileToggle:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+/* Rides the same curve as the track so the handle stays on the moving border
+   during collapse/expand; instant while dragging. */
+.frame[data-animating] .handle {
+  transition: left var(--ds-transition-duration-slow) var(--ds-ease-in-out);
+}
+
+.frame[data-dragging] .handle {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame[data-animating] .handle {
+    transition: none;
+  }
+}
+
+/* Skip link: visually hidden until focused, then a chip above the sidebar. */
+.skipLink {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  z-index: 100;
+  padding: 8px 12px;
+  border-radius: var(--dsw-radius-md);
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+}
+
+.skipLink:focus-visible {
+  top: 8px;
+}

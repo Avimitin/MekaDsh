@@ -1,0 +1,114 @@
+/* Code card: dsh CodeBlock/CodeCard anatomy — rounded code-block surface, a
+   banner with language and icon actions, and a scrollable content region. */
+
+.block {
+  --dsl-code-block-content-font: 11px/19px var(--ds-font-family-code);
+
+  position: relative;
+  margin: 16px 0;
+  color: var(--dsw-alias-label-primary);
+  background: var(--dsw-alias-markdown-code-block);
+  border-radius: var(--dsw-radius-lg);
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 18px 8px 22px;
+  background: var(--dsw-alias-markdown-code-block);
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  color: var(--dsw-alias-label-secondary);
+  font: 11px/18px var(--dsw-font-family);
+}
+
+.language {
+  flex: none;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--ds-font-family-code);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--dsw-radius-sm);
+  color: var(--dsw-alias-label-secondary);
+  background: transparent;
+  cursor: pointer;
+}
+
+.action:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.action:focus-visible {
+  outline: 1px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+  outline-offset: 2px;
+}
+
+.content {
+  overflow-x: auto;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.content:focus-visible {
+  outline: 1px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+  outline-offset: -1px;
+}
+
+.block :where(pre) {
+  margin: 0 !important;
+  padding: 6px 22px 20px;
+  overflow: visible;
+  font: var(--dsl-code-block-content-font);
+  white-space: pre;
+  background: var(--dsw-alias-markdown-code-block);
+}
+
+/* Shiki inlines its theme background var; route it to the repo token. */
+.block :where(pre.shiki) {
+  background: var(--dsw-alias-markdown-code-block) !important;
+}
+
+.block[data-wrap] :where(pre) {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.block :where(pre) code {
+  padding: 0;
+  font: inherit;
+  background: none;
+}
+
+.plain {
+  color: var(--dsw-alias-label-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action {
+    transition: none;
+  }
+}

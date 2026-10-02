@@ -1,0 +1,125 @@
+/* Tool summary row (dsh ToolRow anatomy): 24px single line at the default
+   size — [16 leading] gap6 [title 13/24] gap8 [2x2 dot] gap8 [summary FILL
+   truncate]. Title and summary read the secondary tier, matching think text. */
+
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  overflow: hidden;
+}
+
+/* The uncapped body scrolls with the conversation; keep the collapse toggle
+   reachable above it. */
+.root[data-expanded] [data-open] [data-disclosure-row] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--dsw-alias-bg-base);
+}
+
+.leading {
+  flex-shrink: 0;
+}
+
+.title {
+  font-weight: 400;
+}
+
+.sep {
+  flex: none;
+  width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  margin: 0 8px;
+  background: var(--dsw-alias-label-caption);
+}
+
+.summary {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(24px + var(--dsh-content-font-delta, 0px));
+}
+
+/* Trailing fragment kept out of .summary's ellipsis (the diff totals). */
+.summarySuffix {
+  flex: none;
+  margin-left: 4px;
+  white-space: nowrap;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(24px + var(--dsh-content-font-delta, 0px));
+}
+
+/* Diff-row +/- totals: the code font, matching the diff body the numbers
+   summarize; a wider gap keeps the digits from reading as part of the path. */
+.diffStat {
+  margin-left: 10px;
+  font-family: var(--ds-font-family-code);
+  font-size: calc(var(--dsh-content-font-size-secondary, 13px) - 2px);
+  transform: translateY(0.5px);
+}
+
+.row:is(:hover, [aria-expanded='true']) .diffAdded {
+  color: color-mix(in srgb, var(--dsw-alias-state-success-primary) 60%, var(--dsw-alias-label-primary));
+}
+
+.row:is(:hover, [aria-expanded='true']) .diffRemoved {
+  color: color-mix(in srgb, var(--dsw-alias-state-error-primary) 60%, var(--dsw-alias-label-primary));
+}
+
+/* Error row's collapsed summary: the failure's first line in the error color. */
+.errorSummary {
+  color: color-mix(in srgb, var(--dsw-alias-state-error-primary) 60%, var(--dsw-alias-label-primary));
+}
+
+/* Interrupted rows retain their business glyph and turn the summary amber. */
+.stoppedSummary {
+  color: color-mix(in srgb, var(--dsw-alias-state-warn-label) 60%, var(--dsw-alias-label-primary));
+}
+
+/* Expanded body wrapper (sibling of .row: clicks never toggle). */
+.bodyWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The write body's own card rides the code block's standalone surface. */
+.codeBody {
+  margin: 4px 0 4px 4px;
+}
+
+.bodyScroll {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+/* Live activity and progress under the collapsed row while the call runs:
+   secondary-tier shimmering text on the flow-row indent. */
+.activity,
+.progress {
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px 0 2px calc(22px + var(--dsh-content-font-delta, 0px));
+  color: var(--dsw-alias-label-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(20px + var(--dsh-content-font-delta-secondary, 0px));
+}
+
+.progress {
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition: none;
+  }
+}

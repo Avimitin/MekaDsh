@@ -1,0 +1,134 @@
+/* Compaction marker (dsh MessageItem .compactionRow anatomy): one 24px row
+   with a context icon at rest and a hover/focus disclosure for the summary
+   body, which pins while its uncapped body scrolls. */
+
+.row {
+  /* The toggle's line, and the band a pinned toggle occupies. */
+  --meka-compaction-header-height: calc(24px + var(--dsh-content-font-delta, 0px));
+  padding: 2px 0;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--meka-compaction-header-height);
+  min-width: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--dsw-radius-sm);
+  background: none;
+  color: var(--dsw-alias-label-secondary);
+  transition: color 100ms ease;
+  font: inherit;
+  text-align: left;
+}
+
+/* The summary body flows uncapped with the page; pin the toggle to the
+   conversation scroll container's top while the row is open. */
+.row:has(.body) .toggle {
+  position: sticky;
+  top: 0;
+  z-index: 7;
+  border-radius: 0;
+  background: var(--dsw-alias-bg-base);
+}
+
+/* A fenced code block in the summary pins its banner at the scrollport top,
+   where this pinned toggle already sits; stop the banner below the toggle. */
+.body [data-code-block-banner] {
+  top: var(--meka-compaction-header-height);
+}
+
+/* Pinned, the toggle needs an opaque hover fill. */
+.row:has(.body) .toggle:hover {
+  background: var(--dsw-alias-interactive-bg-hover-solid);
+}
+
+.toggle:not(:disabled) {
+  cursor: pointer;
+}
+
+.toggle:hover {
+  color: var(--dsw-alias-label-secondary);
+}
+
+.toggle:not(:disabled):hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.leading {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: calc(16px + var(--dsh-content-font-delta, 0px));
+  height: calc(16px + var(--dsh-content-font-delta, 0px));
+  margin-right: 6px;
+  color: inherit;
+}
+
+/* Same glyph-scaling rule as DisclosureRow's leading. */
+.leading svg {
+  width: calc(14px + var(--dsh-content-font-delta, 0px));
+  height: calc(14px + var(--dsh-content-font-delta, 0px));
+}
+
+.contextIcon,
+.disclosureIcon {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.disclosureIcon {
+  opacity: 0;
+}
+
+.toggle:not(:disabled):hover .contextIcon,
+.toggle:not(:disabled):focus-visible .contextIcon {
+  opacity: 0;
+}
+
+.toggle:not(:disabled):hover .disclosureIcon,
+.toggle:not(:disabled):focus-visible .disclosureIcon {
+  opacity: 1;
+}
+
+.title {
+  flex: none;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(24px + var(--dsh-content-font-delta, 0px));
+  color: inherit;
+}
+
+.sep {
+  flex: none;
+  width: 2px;
+  height: 2px;
+  margin: 0 8px;
+  border-radius: 1px;
+  background: var(--dsw-alias-label-caption);
+}
+
+.caption {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(24px + var(--dsh-content-font-delta, 0px));
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.body {
+  /* Indent under the title, which starts at leading (16 + delta) + gap 6. */
+  padding: 4px 0 4px calc(22px + var(--dsh-content-font-delta, 0px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle {
+    transition: none;
+  }
+}

@@ -1,0 +1,101 @@
+/*
+ * Design tokens the ported primitives reference but src/styles does not
+ * define. Values copied verbatim from dsh's ui-theme sheets
+ * (gradient-shadow-text.css and the design-platform font ladder) so the
+ * primitives render exactly as dsh's. Loaded once by ./index.ts.
+ */
+
+body {
+  /* Resolve the source palette on body before code blocks alias it locally.
+     A stronger shade keeps small syntax text readable on inset surfaces. */
+  --dsw-alias-code-property: color-mix(in srgb, var(--shiki-token-function) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-code-string: color-mix(in srgb, var(--shiki-token-string-expression) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-code-number: color-mix(in srgb, var(--shiki-token-constant) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-code-keyword: color-mix(in srgb, var(--shiki-token-keyword) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-code-comment: color-mix(in srgb, var(--shiki-token-comment) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-code-parameter: color-mix(in srgb, var(--shiki-token-parameter) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-code-literal-string: color-mix(in srgb, var(--shiki-token-string) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-code-punctuation: color-mix(in srgb, var(--shiki-token-punctuation) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-code-link: color-mix(in srgb, var(--shiki-token-link) 80%, var(--dsw-alias-label-primary));
+  --dsw-alias-button-info-label: var(--dsw-static-neutral-bluish-00);
+  --dsw-alias-hovercard-bg: var(--dsw-static-neutral-bluish-850);
+  --dsw-shadow-lv1: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --dsw-shadow-lv1-blur: 0 4px 12px 0 rgba(0, 0, 0, 0.02);
+  --dsw-shadow-lv2: 0 4px 12px 0 rgba(0, 0, 0, 0.02), 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+  --dsw-shadow-lv3:
+    0 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 4px 0 rgba(0, 0, 0, 0.02), 0 12px 32px 0 rgba(0, 0, 0, 0.08);
+  /* Elevation: the hairline stroke rides inside box-shadow (components pair
+     it with border: 0) plus two layers of soft light; its color indirection
+     lets surfaces rebind the stroke (menu surfaces rebind the lightest l1). */
+  --dsw-elevation-stroke-color: var(--dsw-alias-border-l4);
+  /* Blocking masks dim the page; menu backgrounds retain their blur. */
+  --dsw-mask-blur: none;
+  --dsw-menu-backdrop-filter: blur(40px) saturate(150%);
+}
+
+body[data-ds-dark-theme] [data-menu-material] {
+  --dsw-elevation-stroke-color: var(--dsw-alias-border-l3);
+}
+
+/* Derived elevation values are declared per element rather than inherited
+   from body: an inherited value has its var() already substituted at body, so
+   a component rebinding --dsw-elevation-stroke-color could not reach into
+   var(--dsw-elevation-*); per-element declaration re-substitutes against the
+   stroke color each element sees (same contract as scrollbar.css). */
+body,
+body * {
+  --dsw-elevation-stroke: 0 0 0 0.5px var(--dsw-elevation-stroke-color);
+  --dsw-elevation-panel:
+    var(--dsw-elevation-stroke), 0 3px 8px 0 rgba(0, 0, 0, 0.03), 0 0 16px 0 rgba(0, 0, 0, 0.02);
+  --dsw-elevation-prominent:
+    var(--dsw-elevation-stroke), 0 3px 8px 0 rgba(0, 0, 0, 0.04), 0 0 20px 0 rgba(0, 0, 0, 0.05);
+  --dsw-elevation-soft:
+    var(--dsw-elevation-stroke), 0 4px 16px 0 rgba(0, 0, 0, 0.03), 0 0 24px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* The content font-size axis. The integer content size (10-22px, default
+   14px) is published on body by the settings presenter; headings and body
+   variants share its pixel delta. Secondary text uses size - 1 through 14px,
+   then size - 2: 10→9, 14→13, 15→13, 22→20. max(13px, ...) selects the delta,
+   not a font-size floor. */
+body {
+  --dsh-content-font-delta: calc(var(--dsh-content-font-size, 14px) - 14px);
+  --dsh-content-font-size-secondary:
+    min(calc(var(--dsh-content-font-size, 14px) - 1px), max(13px, calc(var(--dsh-content-font-size, 14px) - 2px)));
+  --dsh-content-font-delta-secondary: calc(var(--dsh-content-font-size-secondary) - 13px);
+
+  --dsw-font-markdown-h1: 700 calc(21px + var(--dsh-content-font-delta)) / calc(30px + var(--dsh-content-font-delta)) var(--dsw-font-family);
+  --dsw-font-markdown-h2: 700 calc(19px + var(--dsh-content-font-delta)) / calc(28px + var(--dsh-content-font-delta)) var(--dsw-font-family);
+  --dsw-font-markdown-h3: 700 calc(18px + var(--dsh-content-font-delta)) / calc(26px + var(--dsh-content-font-delta)) var(--dsw-font-family);
+  --dsw-font-markdown-h4: 600 var(--dsh-content-font-size, 14px) / calc(24px + var(--dsh-content-font-delta)) var(--dsw-font-family);
+  --dsw-font-markdown-base: var(--dsh-content-font-size, 14px) / calc(24px + var(--dsh-content-font-delta)) var(--dsw-font-family);
+  --dsw-font-markdown-base-strong: 600 var(--dsh-content-font-size, 14px) / calc(24px + var(--dsh-content-font-delta)) var(--dsw-font-family);
+  --dsw-font-markdown-table:
+    var(--dsh-content-font-size-secondary, 13px)/calc(22px + var(--dsh-content-font-delta-secondary, 0px)) var(--dsw-font-family);
+  --dsw-font-markdown-table-head:
+    500 var(--dsh-content-font-size-secondary, 13px)/calc(22px + var(--dsh-content-font-delta-secondary, 0px)) var(--dsw-font-family);
+  --dsw-font-markdown-small: 12px/20px var(--dsw-font-family);
+  --dsw-font-markdown-small-strong: 600 12px/20px var(--dsw-font-family);
+  --dsw-font-markdown-code: 12px/19px var(--ds-font-family-code);
+  --dsw-font-markdown-code-block: 11px/19px var(--ds-font-family-code);
+  --dsw-font-markdown-code-block-small: 11px/16px var(--ds-font-family-code);
+
+  --dsw-font-xs-13: 13px/20px var(--dsw-font-family);
+  --dsw-font-xs-strong-13: 500 13px/20px var(--dsw-font-family);
+  --dsw-font-xxs-12: 12px/18px var(--dsw-font-family);
+  --dsw-font-xxs-strong-12: 500 12px/18px var(--dsw-font-family);
+  --dsw-font-xxxs-11: 11px/14px var(--dsw-font-family);
+}
+
+/* Shiki spans inherit the accessible palette without changing its source sheet. */
+body .shiki {
+  --shiki-token-function: var(--dsw-alias-code-property);
+  --shiki-token-string-expression: var(--dsw-alias-code-string);
+  --shiki-token-constant: var(--dsw-alias-code-number);
+  --shiki-token-keyword: var(--dsw-alias-code-keyword);
+  --shiki-token-comment: var(--dsw-alias-code-comment);
+  --shiki-token-parameter: var(--dsw-alias-code-parameter);
+  --shiki-token-string: var(--dsw-alias-code-literal-string);
+  --shiki-token-punctuation: var(--dsw-alias-code-punctuation);
+  --shiki-token-link: var(--dsw-alias-code-link);
+}

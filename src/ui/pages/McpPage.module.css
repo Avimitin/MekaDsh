@@ -1,0 +1,112 @@
+/* McpPage: server cards in a responsive grid with a tools modal. */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.cardIcon {
+  flex: none;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.cardName {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--dsw-alias-label-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+  border-top: 0.5px solid var(--dsw-alias-border-l2);
+}
+
+.tool:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.toolHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--dsw-alias-label-primary);
+}
+
+.toolName {
+  font-family: var(--ds-font-family-code);
+  font-size: 12px;
+}
+
+.toolDescription {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.disclosure {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.disclosureSummary {
+  cursor: pointer;
+  user-select: none;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.disclosureBody {
+  margin: 4px 0 0;
+}
+
+.wideModal {
+  width: min(560px, 100%);
+  max-height: 100%;
+}
+
+.modalScroll {
+  overflow-y: auto;
+  min-height: 0;
+}

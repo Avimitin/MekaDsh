@@ -1,0 +1,385 @@
+/* Expanded tool bodies: the code-block surface and radius from the dsh
+   TerminalBlock/CodeBlock family, the IN/OUT gutter-label card from dsh's
+   ToolRow, and the platform diff tokens for the edit view. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0 4px 4px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-markdown-code-block);
+  font: 11px/16px var(--ds-font-family-code);
+  overflow: hidden;
+}
+
+.cardTitle {
+  padding: 10px 16px;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--ds-font-family-code);
+  overflow-wrap: anywhere;
+}
+
+.caption {
+  margin: 0;
+  padding: 12px 16px;
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--dsw-font-family);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.bodyText {
+  margin: 0;
+  padding: 12px 16px;
+  max-height: 260px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--dsw-alias-label-secondary);
+}
+
+/* --- shell_execute: command banner + capped output scroller --- */
+
+.terminal {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0 4px 4px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-markdown-code-block);
+  font: 11px/18px var(--ds-font-family-code);
+  overflow: hidden;
+}
+
+.terminalHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 14px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.terminal[data-body] .terminalHeader {
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+}
+
+.terminalPrompt {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.terminalDollar {
+  flex: none;
+  color: var(--dsw-alias-label-secondary);
+  user-select: none;
+}
+
+.terminalCommand {
+  min-width: 0;
+  color: var(--dsw-alias-label-primary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.terminalOutput {
+  margin: 0;
+  padding: 12px 14px;
+  max-height: 224px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.terminalOutput[data-error] {
+  color: color-mix(in srgb, var(--dsw-alias-state-error-primary) 60%, var(--dsw-alias-label-primary));
+}
+
+/* --- file_read: numbered gutter (numbers never copy) --- */
+
+.numbered {
+  margin: 0;
+  padding: 12px 16px;
+  max-height: 260px;
+  overflow: auto;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.numbered code {
+  display: block;
+  counter-reset: meka-source-line;
+  font: inherit;
+  background: none;
+}
+
+.numberedLine {
+  position: relative;
+  display: block;
+  min-height: 1lh;
+  padding-inline-start: calc(var(--meka-line-number-width, 2ch) + 12px);
+  counter-increment: meka-source-line;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.numberedLine::before {
+  position: absolute;
+  inset-inline-start: 0;
+  width: var(--meka-line-number-width, 2ch);
+  color: var(--dsw-alias-label-secondary);
+  text-align: end;
+  content: counter(meka-source-line);
+  user-select: none;
+}
+
+/* --- file_edit: line diff on the platform diff tokens --- */
+
+.diffPath {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.diffTotals {
+  float: right;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+
+.diffAdded {
+  color: color-mix(in srgb, var(--dsw-alias-state-success-primary) 60%, var(--dsw-alias-label-primary));
+}
+
+.diffRemoved {
+  color: color-mix(in srgb, var(--dsw-alias-state-error-primary) 60%, var(--dsw-alias-label-primary));
+}
+
+.diffBody {
+  max-height: 260px;
+  overflow: auto;
+  padding: 6px 0;
+}
+
+.diffLine {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.diffLine[data-kind='added'] {
+  background: var(--dsw-alias-file-diff-added-bg);
+}
+
+.diffLine[data-kind='removed'] {
+  background: var(--dsw-alias-file-diff-deleted-bg);
+}
+
+.diffMarker {
+  flex: none;
+  width: 2ch;
+  padding-left: 12px;
+  color: var(--dsw-alias-label-secondary);
+  text-align: center;
+  user-select: none;
+}
+
+.diffLine[data-kind='added'] .diffMarker {
+  color: var(--dsw-alias-file-diff-added-marker);
+}
+
+.diffLine[data-kind='removed'] .diffMarker {
+  color: var(--dsw-alias-file-diff-deleted-marker);
+}
+
+.diffText {
+  min-width: 0;
+  padding-right: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--dsw-alias-label-secondary);
+}
+
+/* --- web_search / web_fetch --- */
+
+.resultList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.resultRow {
+  padding: 4px 16px;
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--dsw-font-family);
+  font-size: 12px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}
+
+.resultLink {
+  color: var(--dsw-alias-link);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.resultLink:hover {
+  text-decoration: underline dotted var(--dsw-alias-link);
+  text-underline-offset: 3px;
+}
+
+/* --- todo_write / todo_edit --- */
+
+.todoList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.todoRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 16px;
+}
+
+.todoDot {
+  position: relative;
+  top: 1px;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--dsw-alias-border-l4);
+  border-radius: 999px;
+  background: transparent;
+}
+
+.todoDot[data-status='in_progress'] {
+  border-color: var(--dsw-alias-state-business-primary);
+  background: var(--dsw-alias-state-business-primary);
+}
+
+.todoDot[data-status='completed'] {
+  border-color: var(--dsw-alias-state-success-primary);
+  background: var(--dsw-alias-state-success-primary);
+}
+
+.todoDot[data-status='canceled'] {
+  border-color: var(--dsw-alias-label-caption);
+  background: var(--dsw-alias-label-caption);
+}
+
+.todoText {
+  min-width: 0;
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--dsw-font-family);
+  font-size: 12px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}
+
+.todoRow[data-status='completed'] .todoText,
+.todoRow[data-status='canceled'] .todoText {
+  color: var(--dsw-alias-label-secondary);
+}
+
+.todoRow[data-status='completed'] .todoText {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* --- the generic IN/OUT card (dsh ToolRow anatomy) --- */
+
+.ioCard {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0 4px 4px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-markdown-code-block);
+  font: 11px/16px var(--ds-font-family-code);
+}
+
+.ioSection {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 14px;
+  align-items: baseline;
+  padding: 12px 16px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.ioSection::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: var(--dsw-radius-sm);
+}
+
+.ioSection::-webkit-scrollbar-track {
+  margin: 6px 0;
+}
+
+.ioLabel {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--dsw-font-family);
+  font-size: 12px;
+}
+
+.ioPayload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ioDivider {
+  flex: none;
+  height: 0.5px;
+  background: var(--dsw-alias-border-l2);
+}
+
+.ioText {
+  min-width: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.ioText[data-error] {
+  color: color-mix(in srgb, var(--dsw-alias-state-error-primary) 60%, var(--dsw-alias-label-primary));
+}
+
+.imageChip {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 2px 8px;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: 999px;
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--dsw-font-family);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resultLink {
+    transition: none;
+  }
+}

@@ -1,0 +1,49 @@
+/* Slim context-occupancy meter below the docked composer: a 4px bar plus a
+   caption line, fed by GET /v1/sessions/{id}/context. */
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  max-width: 100%;
+  padding: 1px 8px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  font-variant-numeric: tabular-nums;
+  line-height: calc(20px + var(--dsh-content-font-delta-secondary, 0px));
+  white-space: nowrap;
+}
+
+.bar {
+  position: relative;
+  flex: none;
+  width: 64px;
+  height: 4px;
+  border-radius: 999px;
+  corner-shape: round;
+  background: var(--dsw-alias-interactive-bg-hover);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--dsw-alias-state-business-primary);
+  transition: width var(--ds-transition-duration) var(--ds-ease-in-out);
+}
+
+.fill[data-warn] {
+  background: var(--dsw-alias-state-warn-primary);
+}
+
+.caption {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

@@ -1,0 +1,348 @@
+/* Conversation body: the scrollport holds the transcript and the sticky composer seat so
+   wheel over the footer moves the flow (dsh ConversationRoot active phase). */
+
+.frame {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.scroller {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Reserved unconditionally: the seat rides this box, so an auto gutter would move the
+     input card sideways whenever content starts or stops overflowing. */
+  scrollbar-gutter: stable;
+  /* A reading/focus-return landmark, not a discrete control to frame. */
+  outline: none;
+}
+
+.scroller[data-chat-following-tail] {
+  overflow-anchor: none;
+}
+
+.scroller::-webkit-scrollbar-track {
+  margin: 2px;
+}
+
+.content {
+  position: relative;
+  flex: 1 0 auto;
+  min-height: auto;
+}
+
+/* Message column: reading width/anchor/offset published by the reading pane as
+   --dsh-conversation-max-width / --dsh-conversation-center / --dsh-conversation-offset. */
+.column {
+  --column-width: min(100%, var(--dsh-conversation-max-width, 850px));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: var(--dsh-conversation-max-width, 850px);
+  margin: 0;
+  margin-left: clamp(
+    0px,
+    calc(var(--dsh-conversation-center, 50%) + var(--dsh-conversation-offset, 0px) - var(--column-width) / 2),
+    calc(100% - var(--column-width))
+  );
+  padding: 16px 32px 25px;
+  font-size: var(--dsh-content-font-size, 14px);
+}
+
+/* Also share the width axis with the composer capsule and dock cards. */
+.scroller {
+  --dsh-chat-content-width: var(--dsh-conversation-max-width, 850px);
+}
+
+.column :where(a, button, input, textarea, select, summary, [tabindex], [id]) {
+  /* Keep focused history above the sticky seat without scrolling when its input is edited. */
+  scroll-margin-bottom: var(--dsh-composer-height, 0px);
+}
+
+.older {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 10px;
+}
+
+.older button {
+  padding: 4px 12px;
+  border: none;
+  border-radius: var(--dsw-radius-sm);
+  background: var(--dsw-alias-interactive-bg-hover-solid);
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
+  cursor: pointer;
+}
+
+.older button:hover {
+  color: var(--dsw-alias-label-primary);
+}
+
+.hint {
+  margin: 24px 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.opening {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 0;
+  padding: 32px;
+}
+
+.live {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.agentGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 0;
+}
+
+.activity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  color: var(--dsw-alias-label-deep-diving);
+  font-size: calc(var(--dsh-content-font-size, 14px) - 2px);
+  line-height: 22px;
+}
+
+.feedCaption {
+  color: var(--dsw-alias-label-secondary);
+}
+
+.approvalDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dsw-alias-state-warn-primary);
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  color: color-mix(in srgb, var(--dsw-alias-state-warn-primary) 60%, var(--dsw-alias-label-primary));
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    var(--dsw-alias-label-shimmer) 40% 60%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: conversation-shimmer-sweep 1.5s steps(48, end) 0.3s infinite;
+  pointer-events: none;
+}
+
+@keyframes conversation-shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  66.6667%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::after {
+    animation: none;
+  }
+}
+
+/* TurnNavigator pill band: sticky in the scrollport, vertically centered in the part of
+   the viewport the composer seat leaves visible (dsh turn rail placement). */
+.turnSlot {
+  position: sticky;
+  top: 0;
+  z-index: 7;
+  height: 0;
+  pointer-events: none;
+}
+
+.turnFrame {
+  position: absolute;
+  top: calc((var(--dsh-conversation-viewport-height, 100dvh) - var(--dsh-composer-height, 152px)) / 2);
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: auto;
+}
+
+@container (max-width: 900px) {
+  .turnFrame {
+    display: none;
+  }
+}
+
+.composerSeat {
+  position: sticky;
+  bottom: 0;
+  z-index: 7;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  /* Input mask: the transcript fades out under a fixed 36px band at the seat's top. */
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--dsw-alias-bg-base) 0%, transparent) 0px,
+    var(--dsw-alias-bg-base) 36px
+  );
+  --dsh-composer-text-max-height: 336px;
+}
+
+/* Follow the transcript's reading axis, with dsh's wider capsule and 16px
+   side clearance. The seat itself stays full width for its fading mask. */
+.composerSeat > [data-composer] {
+  --column-width: min(100%, calc(var(--dsh-conversation-max-width, 850px) + 32px));
+  width: var(--column-width);
+  margin-left: clamp(
+    0px,
+    calc(var(--dsh-conversation-center, 50%) + var(--dsh-conversation-offset, 0px) - var(--column-width) / 2),
+    calc(100% - var(--column-width))
+  );
+  padding: 0 16px 12px;
+}
+
+.subagentNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 18px 32px 20px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.subagentNote a {
+  color: var(--dsw-alias-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.latestSlot {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--dsh-composer-height, 152px) + 16px);
+  left: 0;
+  z-index: 8;
+  height: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.latest {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 34px;
+  margin-top: -34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 100px;
+  corner-shape: round;
+  background: var(--dsw-alias-button-floating-fill);
+  box-shadow: var(--dsw-elevation-panel);
+  color: var(--dsw-alias-label-primary);
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.latest:hover {
+  background: var(--dsw-alias-button-floating-hover);
+}
+
+.injected {
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.injected summary {
+  cursor: pointer;
+}
+
+.plainText {
+  margin: 6px 0;
+  font-family: var(--ds-font-family-code);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.muted {
+  margin: 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.orphanResult {
+  border: 0.5px solid var(--dsw-alias-border-l3);
+  border-radius: var(--dsw-radius-md);
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.orphanError {
+  border-color: var(--dsw-alias-state-error-secondary);
+}
+
+.orphanResult summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.toolReference {
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--ds-font-family-code);
+  font-size: 11px;
+}
+
+.toolOutput {
+  max-height: 320px;
+  overflow: auto;
+  padding: 4px 10px 8px;
+  outline: none;
+}

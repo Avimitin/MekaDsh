@@ -1,0 +1,27 @@
+.surface {
+  border-radius: var(--dsw-radius-lg);
+}
+
+.compact {
+  border-radius: var(--dsw-radius-md);
+}
+
+:where(.surface) {
+  position: relative;
+}
+
+.surface {
+  isolation: isolate;
+}
+
+/* Filtering only the background keeps nested menus and fixed overlays free of
+ * an ancestor backdrop root or a new fixed-position containing block. */
+.material {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--dsw-menu-surface-fill);
+  backdrop-filter: var(--dsw-menu-backdrop-filter);
+  pointer-events: none;
+}

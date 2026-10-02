@@ -1,0 +1,78 @@
+/* StepperInput: pixel dial with − / + buttons around a draft number field.
+ * Enter commits; the step buttons commit immediately; Escape reverts. */
+
+.stepper {
+  display: inline-flex;
+  align-items: stretch;
+  border: 0.5px solid var(--dsw-alias-border-l4);
+  border-radius: var(--dsw-radius-md);
+  background: var(--dsw-alias-bg-layer-3);
+  overflow: hidden;
+}
+
+.stepButton {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  min-height: 30px;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+}
+
+.stepButton:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.stepButton:disabled {
+  color: var(--dsw-alias-label-secondary);
+  cursor: default;
+}
+
+.glyph {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px;
+  border-inline: 0.5px solid var(--dsw-alias-border-l2);
+  min-width: 0;
+}
+
+.input {
+  width: 56px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-primary);
+  text-align: end;
+  padding: 0;
+  /* Hide the native number spinners; the step buttons own increments. */
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.unit {
+  flex: none;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--dsw-alias-label-secondary);
+}

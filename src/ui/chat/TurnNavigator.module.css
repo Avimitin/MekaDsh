@@ -1,0 +1,62 @@
+/* Floating turn-navigation pill (dsh TurnNavigator's visual language: the
+   layer-1 panel surface, hairline stroke, and tertiary glyphs of the turn
+   rail, restated as a vertical pill). The caller positions the wrapper. */
+
+.pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 28px;
+  padding: 4px 0;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-secondary);
+  box-shadow: var(--dsw-elevation-panel);
+}
+
+.jump {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--dsw-radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    color 100ms ease,
+    background-color 100ms ease;
+}
+
+.jump:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.jump:disabled {
+  opacity: 0.35;
+}
+
+.jump:focus-visible {
+  outline: 1px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+  outline-offset: 1px;
+}
+
+.count {
+  padding: 2px 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 10px;
+  line-height: 14px;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jump {
+    transition: none;
+  }
+}

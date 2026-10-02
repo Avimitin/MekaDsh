@@ -1,0 +1,330 @@
+/* Session row (dsh ui-workspace Rows anatomy: 16px status slot, 4px title gap,
+   trailing time that hover swaps for the actions) with mekaweb's sub-agent
+   tree guides. The row's clickable surface is the anchor; the trailing actions
+   are its sibling so interactive content never nests inside the link. */
+
+.entry {
+  position: relative;
+  --session-indent: 16px;
+  --session-branch-y: 16px;
+  padding-inline-start: min(calc(var(--session-depth, 0) * var(--session-indent)), 25%);
+}
+
+.guide {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(
+    min(var(--session-guide-level) * var(--session-indent), 25%) - var(--session-indent) / 2
+  );
+  width: calc(var(--session-indent) / 2);
+  border-inline-start: 1px solid var(--dsw-alias-border-l3);
+  pointer-events: none;
+}
+
+.guide[data-last] {
+  bottom: auto;
+  height: var(--session-branch-y);
+}
+
+.guide[data-branch]::after {
+  content: '';
+  position: absolute;
+  top: var(--session-branch-y);
+  inset-inline: 0;
+  border-top: 1px solid var(--dsw-alias-border-l3);
+}
+
+.sessionRow {
+  position: relative;
+  border-radius: var(--dsw-radius-md);
+  color: var(--dsw-alias-label-primary);
+}
+
+.sessionRow:hover,
+.sessionRow.menuOpen {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.sessionRow.selected {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.sessionRow[data-busy] {
+  opacity: 0.6;
+}
+
+.sessionLink {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 32px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: inherit;
+}
+
+.sessionLink:focus-visible {
+  outline: var(--dsw-focus-ring-width) solid
+    var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+  outline-offset: -2px;
+}
+
+.slot {
+  flex: none;
+  width: 16px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.titleText {
+  flex: 1;
+  min-width: 0;
+  margin: 0 6px 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.titleText.unread {
+  font-weight: 600;
+}
+
+/* Hovering a session row marquees a title wider than its cell: the row crawls
+   it at a constant speed to its far edge, holds it there, and returns it to
+   the start in one step when the pointer leaves. The mask rides the title
+   span itself so the status slot keeps its full color. */
+.titleText[data-scrolled] {
+  mask-image: linear-gradient(to right, transparent, #000 12px);
+}
+
+.titleText[data-clipped] {
+  mask-image: linear-gradient(to left, transparent, #000 12px);
+}
+
+.titleText[data-scrolled][data-clipped] {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12px,
+    #000 calc(100% - 12px),
+    transparent
+  );
+}
+
+.excerpt {
+  flex-basis: 100%;
+  min-width: 0;
+  margin-left: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.time {
+  flex: none;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.pinIndicator {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  color: var(--dsw-alias-label-caption);
+}
+
+/* Trailing actions surface on hover only: the open menu's trigger sits over
+   the time's cell, which hover hides. They are the anchor's sibling, absolutely
+   positioned at the trailing edge so they never nest inside the link. */
+.rowActions {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  z-index: 1;
+  height: 32px;
+  display: none;
+  align-items: center;
+}
+
+.sessionRow:hover .rowActions,
+.sessionRow.menuOpen .rowActions {
+  display: inline-flex;
+}
+
+.sessionRow:hover .time,
+.sessionRow.menuOpen .time,
+.sessionRow:hover .pinIndicator,
+.sessionRow.menuOpen .pinIndicator {
+  display: none;
+}
+
+/* The shown actions overlay the trailing edge; keep the title's ellipsis out
+   from under the trigger. */
+.sessionRow:hover .sessionLink,
+.sessionRow.menuOpen .sessionLink {
+  padding-right: 28px;
+}
+
+/* The unclipped hover state drops the ellipsis, which would otherwise cover
+   the characters the marquee reached. Guarded because a touch tap latches
+   :hover on the row after the title has already returned. */
+@media (hover: hover) {
+  .sessionRow:hover .titleText,
+  .sessionRow.menuOpen .titleText {
+    text-overflow: clip;
+  }
+}
+
+.iconButton {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: var(--dsw-radius-xs);
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.iconButton:hover {
+  color: var(--dsw-alias-label-primary);
+}
+
+/* Inline rename: the title cell swaps to a text field (dsh .renameInput). */
+.renameRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 32px;
+  box-sizing: border-box;
+  padding: 0 8px;
+}
+
+.renameForm {
+  flex: 1;
+  min-width: 0;
+  margin: 0 6px 0 4px;
+  display: flex;
+  align-items: center;
+}
+
+.renameRow .errorText {
+  flex-basis: 100%;
+  margin: 2px 0 4px 20px;
+}
+
+.renameInput {
+  width: 100%;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0 2px;
+  border: 0.5px solid var(--dsw-alias-border-l4);
+  border-radius: var(--dsw-radius-sm);
+  background: var(--dsw-alias-button-elevated-fill);
+  color: inherit;
+  outline: none;
+}
+
+/* Dialog forms (fork, delete): the dsh dialog family's 44px field row. The
+   dialog classes double as the useDialogState stamping targets. */
+.forkDialog,
+.deleteDialog {
+  /* Layout comes from the Modal primitive; these names only key the
+     data-state hook and any per-dialog overrides. */
+}
+
+.formStack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.dialogInput {
+  width: 100%;
+}
+
+.dialogInput > input {
+  width: 100%;
+}
+
+.errorText {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.rowError {
+  margin: 0;
+  padding: 2px 8px 4px 28px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--dsw-alias-state-error-primary);
+  overflow-wrap: anywhere;
+}
+
+.deleteAction:not(:disabled) {
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.deleteWarning {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-primary);
+}
+
+.deleteWarning > svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--dsw-alias-state-warn-label);
+}
+
+.deleteWarning > p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.mutedNote {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleText {
+    transition: none;
+  }
+}
