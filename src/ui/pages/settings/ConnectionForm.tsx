@@ -2,7 +2,8 @@
 // choice, saving through the runtime so the connection verifies before it
 // persists. Busy and error states surface inline, including cancel mid-connect.
 
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useDeploymentConfig } from '../../../features/files/hooks';
 import { useConnection, useRuntime } from '../../../connections/context';
 import type { Connection } from '../../../connections/storage';
 import { normalizeEndpoint } from '../../../api/client';
@@ -24,6 +25,12 @@ export function ConnectionForm({
   const state = useConnection();
   const [name, setName] = useState(existing?.name ?? '');
   const [endpoint, setEndpoint] = useState(existing?.endpoint ?? '');
+  const deployment = useDeploymentConfig();
+  const endpointEdited = useRef(Boolean(existing));
+  useEffect(() => {
+    const suggested = deployment.data?.connections[0]?.apiBaseUrl;
+    if (!endpointEdited.current && suggested) setEndpoint(suggested);
+  }, [deployment.data]);
   const [token, setToken] = useState('');
   const [remember, setRemember] = useState(existing?.remember ?? true);
   const connectButton = useRef<HTMLButtonElement>(null);
@@ -68,7 +75,7 @@ export function ConnectionForm({
           type="url"
           required
           value={endpoint}
-          onChange={(event) => setEndpoint(event.target.value)}
+          onChange={(event) => { endpointEdited.current = true; setEndpoint(event.target.value); }}
           placeholder="https://meka.example.com"
           autoComplete="url"
         />

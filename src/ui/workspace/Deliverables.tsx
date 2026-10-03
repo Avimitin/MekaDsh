@@ -10,6 +10,9 @@ import { useCopyFeedback } from '../primitives/use-copy-feedback';
 import { extractRecordedFiles, fileLanguage, recordedDownloadName, type RecordedOperation } from './recorded-files';
 import { staticHtmlPreview } from './static-preview';
 import css from './Deliverables.module.css';
+import { useConnection } from '../../connections/context';
+import { useFileAccess } from '../../features/files/hooks';
+import { CurrentFile } from './CurrentFile';
 
 const MAX_PREVIEW_CHARS = 200_000;
 const labels = { write: 'Write', edit: 'Edit', read: 'Read' };
@@ -97,6 +100,10 @@ function OperationPreview({ operation }: { operation: RecordedOperation }) {
 }
 
 export function DeliverablesPanel({ state, selectedPath, onSelectPath }: { state: SessionState; selectedPath?: string | undefined; onSelectPath?: ((path: string) => void) | undefined }) {
+  const { connection } = useConnection();
+  const access = useFileAccess(connection);
+  const [view, setView] = useState<'recorded' | 'current'>('recorded');
+  const currentAvailable = Boolean(access.access?.mounts.length);
   const files = useMemo(() => extractRecordedFiles(state), [state]);
   const [path, setPath] = useState(selectedPath ?? '');
   const [operationKey, setOperationKey] = useState('');
@@ -106,6 +113,12 @@ export function DeliverablesPanel({ state, selectedPath, onSelectPath }: { state
   const file = files.find((item) => item.path === path) ?? files[0];
   const operation = file?.operations.find((item) => item.key === operationKey) ?? file?.operations.at(-1);
   return <div className={css.panel}>
+    {currentAvailable && <div className={css.toolbar}><div className={css.modes} role="group" aria-label="File source">
+      <button type="button" aria-pressed={view === 'recorded'} onClick={() => setView('recorded')}>Recorded operations</button>
+      <button type="button" aria-pressed={view === 'current'} onClick={() => setView('current')}>Current file</button>
+    </div></div>}
+    {currentAvailable && view === 'current' ? <CurrentFile key={`${state.id}-${selectedPath ?? file?.path ?? ''}`}
+      path={selectedPath ?? file?.path ?? ''} cwd={state.session?.cwd} /> : <>
     <p className={css.coverage}>Successful file operations in the loaded conversation. Shell changes and files outside these records are not included.{state.offset > 0 && ' Load earlier messages to include older records.'}</p>
     {!files.length ? <div className={css.empty}><IconDeliverDocRegular size={36} /><h3>No recorded files yet</h3><p>Successful file reads, writes, and edits will appear here with their available content.</p></div> : <>
       <div className={css.fileList}>
@@ -129,6 +142,7 @@ export function DeliverablesPanel({ state, selectedPath, onSelectPath }: { state
         </div>
         <OperationPreview key={`${state.id}-${operation.key}`} operation={operation} />
       </>}
+    </>}
     </>}
   </div>;
 }

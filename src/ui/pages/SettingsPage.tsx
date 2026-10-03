@@ -40,6 +40,7 @@ import {
 } from './shared/page';
 import { RiskConfirmButton } from './shared/RiskConfirmButton';
 import { ConnectionForm } from './settings/ConnectionForm';
+import { FileAccessSettings } from './settings/FileAccessSettings';
 import { NotificationsSection } from './settings/NotificationsSection';
 import { StepperInput } from './settings/StepperInput';
 import css from './SettingsPage.module.css';
@@ -143,6 +144,7 @@ export function SettingsPage() {
           </Button>
         </SectionFooter>
       </Section>
+      <FileAccessSettings />
       <Section title="Appearance" description="Theme and conversation reading layout.">
         <Row
           flush

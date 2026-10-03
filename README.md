@@ -15,7 +15,8 @@ sessions, memory, skills, schedules, and MCP servers.
 
 - **Files:** inspect successful file reads, writes, and edits recorded in a
   conversation. Compare edit snippets, preview Markdown or static HTML, and copy
-  or download the available content.
+  or download the available content. An optional file server also provides current
+  file previews, refresh, and downloads.
 - **Activity:** search and filter saved/live messages and tool calls, inspect
   inputs and results, and load earlier history.
 - **Session:** view context usage, background tasks, child agents, and schedules.
@@ -27,8 +28,8 @@ Open the workspace panel from the conversation header. Its tabs support arrow-ke
 navigation; on desktop, drag the divider to resize or expand the panel. On mobile,
 views open in a dialog.
 
-These features use the existing meka API. Files shows recorded content, not a live
-file browser or a complete Git diff. HTML previews disable scripts and external
+These features use the existing meka API. Without a file server, Files shows recorded
+content. It is not a complete Git diff. HTML previews disable scripts and external
 resources. Activity timestamps describe message persistence, not execution timing.
 
 ## Run locally
@@ -72,6 +73,16 @@ npm run dev
 
 To build the static site with Nix, run `nix build`. The output is available at
 `result/`.
+
+### Optional file server
+
+Serve a `mekadsh-config.json` beside the frontend to provide API and file-server
+defaults without rebuilding. Users can override mappings and enter separate file
+credentials under **Settings → File access**. The **Current file** view then reads
+actual server files, including files created through shell commands.
+
+See [file access setup](docs/file-access.md) for runtime JSON, authentication,
+nginx examples, and the kurisu NixOS module options.
 
 ## License
 

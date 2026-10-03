@@ -17,8 +17,10 @@ import { ApprovalTray } from './ui/shell/ApprovalTray';
 import { NotificationToasts } from './ui/shell/NotificationToasts';
 import { ShortcutsDialog } from './ui/shell/ShortcutsDialog';
 import { ToastViewport } from './ui/primitives/toast-store';
+import { useDeploymentConfig } from './features/files/hooks';
 
 export function App({ runtime }: { runtime: ConnectionRuntime }) {
+  useDeploymentConfig();
   useEffect(trackFocusInput, []);
   useEffect(() => runtime.start(), [runtime]);
   return (

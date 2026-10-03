@@ -4,7 +4,8 @@
  * trash to remove), and the endpoint/token/remember form. Connecting goes
  * through runtime.save / runtime.connect; failures render below the form.
  */
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useDeploymentConfig } from '../../features/files/hooks';
 import type { FormEvent } from 'react';
 import { useConnection, useRuntime, useSettings } from '../../connections/context';
 import type { Connection } from '../../connections/storage';
@@ -23,6 +24,12 @@ function ConnectionForm({ existing }: { existing?: Connection | undefined }) {
   const runtime = useRuntime();
   const state = useConnection();
   const [endpoint, setEndpoint] = useState(existing?.endpoint ?? '');
+  const deployment = useDeploymentConfig();
+  const endpointEdited = useRef(Boolean(existing));
+  useEffect(() => {
+    const suggested = deployment.data?.connections[0]?.apiBaseUrl;
+    if (!endpointEdited.current && suggested) setEndpoint(suggested);
+  }, [deployment.data]);
   const [token, setToken] = useState('');
   const [remember, setRemember] = useState(existing?.remember ?? true);
   const connectButton = useRef<HTMLButtonElement>(null);
@@ -47,7 +54,7 @@ function ConnectionForm({ existing }: { existing?: Connection | undefined }) {
           value={endpoint}
           placeholder="https://meka.example.com"
           autoComplete="url"
-          onChange={(event) => setEndpoint(event.target.value)}
+          onChange={(event) => { endpointEdited.current = true; setEndpoint(event.target.value); }}
         />
       </label>
       <label className={css.field}>

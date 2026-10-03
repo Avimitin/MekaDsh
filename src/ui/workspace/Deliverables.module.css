@@ -44,4 +44,9 @@
 .sign { text-align: center; }
 .empty { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: auto; padding: 40px 24px; color: var(--dsw-alias-label-secondary); text-align: center; line-height: 1.6; }
 .empty h3, .empty p { margin: 0; font-size: 13px; }
+.currentPath { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 14px; }
+.currentPath label { flex-basis: 100%; }
+.currentPath input { flex: 1 1 180px; }
+.currentImage { display: block; max-width: 100%; height: auto; margin: auto; }
+@media (any-pointer: coarse) { .currentPath input { font-size: 16px; } }
 @media (any-pointer: coarse) { .file, .modes button, .actions button, .operationPicker select { min-height: 44px; } }
