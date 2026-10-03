@@ -13,10 +13,9 @@ sessions, memory, skills, schedules, and MCP servers.
 
 ## Workspace features
 
-- **Files:** inspect successful file reads, writes, and edits recorded in a
-  conversation. Compare edit snippets, preview Markdown or static HTML, and copy
-  or download the available content. An optional file server also provides current
-  file previews, refresh, and downloads.
+- **Files:** preview and download current server files through a configured file
+  server. Successful file operations provide path shortcuts; any path can also be
+  entered directly. Without a file server, the panel links to configuration.
 - **Activity:** search and filter saved/live messages and tool calls, inspect
   inputs and results, and load earlier history.
 - **Session:** view context usage, background tasks, child agents, and schedules.
@@ -28,8 +27,8 @@ Open the workspace panel from the conversation header. Its tabs support arrow-ke
 navigation; on desktop, drag the divider to resize or expand the panel. On mobile,
 views open in a dialog.
 
-These features use the existing meka API. Without a file server, Files shows recorded
-content. It is not a complete Git diff. HTML previews disable scripts and external
+These features use the existing meka API. File previews and downloads require a
+separate file server; transcript snippets are not used as file contents. HTML previews disable scripts and external
 resources. Activity timestamps describe message persistence, not execution timing.
 
 ## Run locally
@@ -78,7 +77,7 @@ To build the static site with Nix, run `nix build`. The output is available at
 
 Serve a `mekadsh-config.json` beside the frontend to provide API and file-server
 defaults without rebuilding. Users can override mappings and enter separate file
-credentials under **Settings → File access**. The **Current file** view then reads
+credentials under **Settings → File access**. The **Files** panel then reads
 actual server files, including files created through shell commands.
 
 See [file access setup](docs/file-access.md) for runtime JSON, authentication,

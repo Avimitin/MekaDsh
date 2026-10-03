@@ -6,7 +6,7 @@ import { DOWNLOAD_LIMIT, fetchFile } from '../../features/files/client';
 import { Button } from '../primitives/Button';
 import { CodeBlock } from '../chat/markdown/CodeBlock';
 import { staticHtmlPreview } from './static-preview';
-import { fileLanguage } from './recorded-files';
+import { fileLanguage } from './file-language';
 import css from './Deliverables.module.css';
 
 type LoadedFile = Awaited<ReturnType<typeof fetchFile>>;

@@ -77,7 +77,7 @@ export function ConversationHeader({ state }: { state: SessionState | undefined 
       </div>
       <div className={css.headerActions}>
         {session && workspace && <>
-          <Button variant="ghost" size="sm" aria-label="Open recorded files" title="Recorded files"
+          <Button variant="ghost" size="sm" aria-label="Open files" title="Files"
             onClick={() => workspace.openPanel('files')}><IconCodeOutlineRegular size={16} /></Button>
           <Button variant="ghost" size="sm" aria-label="Open activity" title="Activity"
             onClick={() => workspace.openPanel('activity')}><IconFlatListOutlineRegular size={16} /></Button>

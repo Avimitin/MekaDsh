@@ -1,4 +1,4 @@
-/** A separate opaque-origin iframe renders only static, recorded HTML. */
+/** A separate opaque-origin iframe renders only static HTML. */
 export function staticHtmlPreview(source: string): string {
   const doc = new DOMParser().parseFromString(source, 'text/html');
   // Remove navigation, nested browsing contexts, active content, and network-bearing metadata.

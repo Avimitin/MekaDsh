@@ -1,8 +1,9 @@
 # Current file access
 
 mekadsh can read current files from a separate HTTP file server. The frontend
-remains static and meka's API is unchanged. Recorded operations remain available
-without a file server.
+remains static and meka's API is unchanged. Without a file server, the Files panel
+shows an error with a link to Settings. Transcript snippets are never offered as
+file previews or downloads.
 
 ## Automatic configuration
 
@@ -74,9 +75,9 @@ redirects: configure the final URL, not a redirect to another host or login page
 
 ## Using files
 
-Open the conversation's **Files** panel and select **Current file**. A recorded
-file supplies the initial path, or enter a path directly for files created by shell
-commands. Relative paths use the session's *current* working directory; an old
+Open the conversation's **Files** panel. Successful file operations supply path
+shortcuts, or enter a path directly for files created by shell commands. All previews
+and downloads fetch the current file server contents. Relative paths use the session's *current* working directory; an old
 operation may have used a different directory. Absolute paths avoid this ambiguity.
 
 Current previews support UTF-8 source text, PNG/JPEG/GIF/WebP, PDF where the browser

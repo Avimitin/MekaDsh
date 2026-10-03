@@ -57,7 +57,7 @@ function FileAccessForm({ connection }: { connection: Connection }) {
   return <>
     <p className={css.hint}>{files.loading ? 'Loading deployment defaults…' : files.overridden
       ? 'Using settings saved for this connection in this browser.'
-      : files.access ? 'Using deployment defaults.' : 'No file server configured. Recorded previews are still available.'}</p>
+      : files.access ? 'Using deployment defaults.' : 'No file server configured. Configure one to preview and download files.'}</p>
     {files.access?.mounts.map(m => <p className={css.mapping} key={m.pathPrefix}>{m.pathPrefix} → {m.urlPrefix}</p>)}
     {files.access?.mounts.length === 0 && <p className={css.hint}>Current file access is disabled for this connection.</p>}
     <div className={css.actions}>
