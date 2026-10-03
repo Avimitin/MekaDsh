@@ -110,6 +110,11 @@
   flex-direction: column;
 }
 
+.sectionContent {
+  min-width: 0;
+  padding: 0 16px 16px;
+}
+
 .row {
   display: flex;
   align-items: center;

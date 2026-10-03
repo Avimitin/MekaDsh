@@ -88,6 +88,11 @@ export function Row({
   );
 }
 
+/** Padded section content for forms that do not use the label/control Row layout. */
+export function SectionContent({ children }: { children: ReactNode }) {
+  return <div className={css.sectionContent}>{children}</div>;
+}
+
 export function SectionFooter({ children }: { children: ReactNode }) {
   return <div className={css.footer}>{children}</div>;
 }

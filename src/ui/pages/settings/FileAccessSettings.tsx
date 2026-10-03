@@ -6,7 +6,7 @@ import { fileRequest, checkFileResponse } from '../../../features/files/client';
 import { saveFileAccess, saveFileCredential, useFileAccess } from '../../../features/files/hooks';
 import { Button } from '../../primitives/Button';
 import { Input } from '../../primitives/Input';
-import { ErrorNotice, Field, Section } from '../shared/page';
+import { ErrorNotice, Field, Section, SectionContent } from '../shared/page';
 import css from './FileAccessSettings.module.css';
 
 export function FileAccessSettings() {
@@ -15,14 +15,16 @@ export function FileAccessSettings() {
   const [selected, setSelected] = useState(connection?.id ?? '');
   const target = connections.find(c => c.id === selected) ?? connection;
   return <Section title="File access" description="Read current files through a separate file server. Meka API tokens are never sent to it.">
-    <div className={css.form}>
-      <Field label="Connection">
-        <select value={target?.id ?? ''} onChange={event => setSelected(event.target.value)}>
-          {connections.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
-      </Field>
-      {target && <FileAccessForm key={target.id + target.authority} connection={target} />}
-    </div>
+    <SectionContent>
+      <div className={css.form}>
+        <Field label="Connection">
+          <select value={target?.id ?? ''} onChange={event => setSelected(event.target.value)}>
+            {connections.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </Field>
+        {target && <FileAccessForm key={target.id + target.authority} connection={target} />}
+      </div>
+    </SectionContent>
   </Section>;
 }
 
