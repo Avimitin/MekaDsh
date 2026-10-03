@@ -12,6 +12,7 @@ derived from mekaweb (https://github.com/k4yt3x/mekaweb), licensed AGPL-3.0-or-l
 
 The design tokens under `src/styles/` (`design-platform.css`, `base.css`, `focus.css`,
 `scrollbar.css`, `shiki.css`, `corner-shape.css`), the icon set under `src/ui/icons/`,
+the running whale animation (`src/ui/chat/running-whale@2x.png`),
 and the component designs under `src/ui/` are derived from DeepSeek Harness
 (https://github.com/deepseek-ai/deepseek-harness):
 

@@ -244,28 +244,6 @@
   --alert-color: var(--dsw-alias-state-error-primary);
 }
 
-/* Typing caret trailing streamed text: a 2px currentColor bar, 1s blink. */
-.streamingCaret {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  margin-left: 2px;
-  border-radius: 1px;
-  background: currentColor;
-  vertical-align: -0.15em;
-  animation: meka-markdown-caret-blink 1s step-end infinite;
-}
-
-@keyframes meka-markdown-caret-blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
 /* Compact variant (ReasoningRow's think body, CompactionCard's summary): the
    secondary tier, one step under the body, tertiary color. */
 .compact {
@@ -366,10 +344,4 @@
 
 .compact :global(.katex-display) {
   margin: 4px 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .streamingCaret {
-    animation: none;
-  }
 }

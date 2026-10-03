@@ -179,6 +179,5 @@ export function responseActivityIndicator(
         : state.feed === 'reconnecting'
           ? 'reconnecting'
           : 'disconnected';
-  if (status === 'working' && state.textStreaming) return;
   return { index, status };
 }

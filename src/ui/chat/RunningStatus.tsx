@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from 'react';
+import { RunningWhaleTail } from './RunningWhaleTail';
 import { TextShimmer } from '../primitives/TextShimmer';
 import css from './RunningStatus.module.css';
 
@@ -17,7 +18,7 @@ function formatDuration(ms: number): string {
 }
 
 /**
- * The live status under a running turn: a pulsing meka mark and a shimmering
+ * The live status under a running turn: the Harness animated whale tail and a shimmering
  * "Working…" label with a whole-second elapsed clock ("Working for 5s"), or
  * "Compacting context…" while the turn is a compaction's. Mount only while
  * the session is running; ticks are not announced to assistive technology.
@@ -27,7 +28,9 @@ function formatDuration(ms: number): string {
 export const RunningStatus = memo(function RunningStatus({
   compacting = false,
   startedAt,
+  divider = false,
 }: {
+  divider?: boolean;
   compacting?: boolean | undefined;
   startedAt?: number | undefined;
 }) {
@@ -52,14 +55,9 @@ export const RunningStatus = memo(function RunningStatus({
       <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {compacting ? 'Compacting context' : 'Working'}
       </span>
-      <span className={css.runningDivider} aria-hidden="true" />
+      <span className={css.runningDivider} data-visible={divider || undefined} aria-hidden="true" />
       <span className={css.runningContent}>
-        <img
-          className={css.runningMark}
-          src={`${import.meta.env.BASE_URL}meka.webp`}
-          alt=""
-          aria-hidden="true"
-        />
+        <RunningWhaleTail />
         <TextShimmer active className={css.runningText}>
           {label}
         </TextShimmer>

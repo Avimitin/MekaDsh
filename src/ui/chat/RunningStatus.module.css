@@ -1,15 +1,13 @@
-/* Running turn clock (dsh ChatView .running anatomy): deep-diving colors, a
-   hairline divider, and the shimmering status text; the DeepSeek whale is
-   replaced by the meka mark with a gentle pulse. */
-
+/* Running status and whale animation from DeepSeek Harness (MIT). */
 .running {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
   --dsw-alias-label-shimmer: var(--dsw-alias-label-deep-diving-shimmer);
   color: var(--dsw-alias-label-deep-diving);
-  font-size: var(--dsh-content-font-size, 14px);
-  line-height: calc(24px + var(--dsh-content-font-delta, 0px));
+  font-size: calc(var(--dsh-content-font-size, 14px) - 2px);
+  line-height: calc(22px + var(--dsh-content-font-delta, 0px));
 }
 
 .runningDivider {
@@ -28,33 +26,49 @@
   gap: 6px;
 }
 
-.runningMark {
-  flex: none;
-  width: calc(14px + var(--dsh-content-font-delta, 0px));
-  height: calc(14px + var(--dsh-content-font-delta, 0px));
-  border-radius: 3px;
-  animation: meka-running-pulse 2s var(--ds-ease-in-out) infinite;
-}
-
 .runningText {
   min-width: 0;
   font-variant-numeric: tabular-nums;
 }
 
-@keyframes meka-running-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.65;
-    transform: scale(0.88);
+.runningIcon {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  width: calc(14px + var(--dsh-content-font-delta, 0px));
+  height: calc(14px + var(--dsh-content-font-delta, 0px));
+  /* The fixed footprint contains the animation's layout and paint. */
+  contain: strict;
+  overflow: hidden;
+}
+
+.runningWhaleAnimated {
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+
+.runningWhaleStill {
+  display: initial;
+}
+
+@supports (mask-mode: alpha) and (mask-image: url('')) {
+  @media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+    .runningWhaleAnimated {
+      display: block;
+      background: currentColor;
+      mask: url('./running-whale@2x.png') center / 100% 100% no-repeat;
+      mask-mode: alpha;
+      /* Keep animated-mask repaints on an icon-sized composited layer. */
+      will-change: transform;
+    }
+
+    .runningWhaleStill {
+      display: none;
+    }
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .runningMark {
-    animation: none;
-  }
+.runningDivider[data-visible] {
+  display: block;
 }

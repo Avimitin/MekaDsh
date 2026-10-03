@@ -324,12 +324,16 @@ function ConversationView({ state }: { state: SessionState }) {
                     {group.kind === 'user' ? (
                       sentMessage(group.submission)
                     ) : running ? (
-                      <LiveAgentGroup group={group} tools={state.tools} />
+                      <LiveAgentGroup
+                        group={group}
+                        tools={state.tools}
+                        streamingIndex={waiting?.status === 'working' ? state.blocks.length - 1 : -1}
+                      />
                     ) : (
                       <SettledAgentGroup group={group} tools={state.tools} state={state} />
                     )}
                     {waiting?.index === index + 1 && appendActivity && (
-                      <ActivityRow status={waiting.status} startedAt={runningStartedAt} />
+                      <ActivityRow status={waiting.status} startedAt={runningStartedAt} divider />
                     )}
                   </Fragment>
                 ))}
@@ -417,14 +421,16 @@ function ConversationView({ state }: { state: SessionState }) {
 function ActivityRow({
   status,
   startedAt,
+  divider = false,
 }: {
   status: Activity['status'];
   startedAt: number | undefined;
+  divider?: boolean;
 }) {
   if (status === 'working' || status === 'compacting')
     return (
       <div className={css.activity}>
-        <RunningStatus compacting={status === 'compacting'} startedAt={startedAt} />
+        <RunningStatus compacting={status === 'compacting'} startedAt={startedAt} divider={divider} />
       </div>
     );
   if (status === 'approval')
@@ -450,9 +456,11 @@ function ActivityRow({
 function LiveAgentGroup({
   group,
   tools,
+  streamingIndex,
 }: {
   group: Extract<ReturnType<typeof groupLiveMessages>[number], { kind: 'agent' }>;
   tools: Record<string, LiveTool>;
+  streamingIndex: number;
 }) {
   return (
     <div className={css.agentGroup} data-live>
@@ -463,8 +471,8 @@ function LiveAgentGroup({
           return <ToolRow key={block.id} call={liveCallView(tool)} />;
         }
         if (block.kind === 'thinking')
-          return <ReasoningRow key={index} text={block.text} streaming />;
-        return <AssistantMarkdown key={index} text={block.text} streaming />;
+          return <ReasoningRow key={index} text={block.text} streaming={index === streamingIndex} />;
+        return <AssistantMarkdown key={index} text={block.text} streaming={index === streamingIndex} />;
       })}
     </div>
   );

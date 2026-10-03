@@ -58,7 +58,7 @@ const alertIcons = {
  * shiki code blocks, and mermaid diagrams. HTML passes through as text,
  * external links open in a new tab, and external images render as links —
  * their bytes are never fetched. While `streaming`, the text re-parses per
- * delta and a typing caret trails the content.
+ * delta. Turn activity is shown separately, as in DeepSeek Harness.
  * @param props.text - the complete or still-growing markdown source.
  * @param props.streaming - whether the text is the live tail of a stream.
  * @param props.className - extra class merged onto the markdown root.
@@ -177,7 +177,6 @@ export const AssistantMarkdown = memo(function AssistantMarkdown({
       >
         {normalizeMathDelimiters(text)}
       </ReactMarkdown>
-      {streaming && <span className={css.streamingCaret} aria-hidden="true" />}
     </div>
   );
 });

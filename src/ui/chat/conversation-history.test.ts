@@ -366,10 +366,10 @@ it.each([
   expect(activity(state)).toEqual({ index: 2, status: 'working' });
 });
 
-it('hides activity only while text is streaming, keeping approval and connection states visible', () => {
+it('keeps a single turn status while text streams and switches to connection waits', () => {
   const state = waitingState({ textStreaming: true });
   state.blocks.push({ kind: 'text', text: 'Streaming reply' });
-  expect(activity(state)).toBeUndefined();
+  expect(activity(state)).toEqual({ index: 2, status: 'working' });
   state.feed = 'reconnecting';
   expect(activity(state)).toEqual({ index: 2, status: 'reconnecting' });
 });
